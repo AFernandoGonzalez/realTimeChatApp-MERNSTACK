@@ -1,7 +1,9 @@
 // backend/src/sockets/chatSocket.js
 import { Server } from 'socket.io';
 import jwt from 'jsonwebtoken';
-import Message from '../models/Message.js'; // Import your Message model
+import Message from '../models/Message.js';
+import User from '../models/User.js';
+import UserProfile from '../models/UserProfile.js';
 
 const FRONTEND_URL = process.env.FRONTEND_MAIN_URL || 'http://localhost:3000';
 
@@ -14,10 +16,33 @@ export const chatSocket = (server) => {
     });
 
 
-    io.on('connection', (socket) => {
-        // console.log('New client connected', socket.id);
+    let users = [];
 
-        
+
+    io.on('connection', (socket) => {
+        console.log('New client connected', socket.id);
+
+
+        socket.on("loginUser", async (username) => {
+            console.log("username", username);
+
+            try {
+                const user = await User.findOne({ username });
+                if (user) {
+                    const userProfile = await UserProfile.findOne({ userId: user._id })
+                        .populate({
+                            path: 'contacts',
+                            model: 'User',
+                            select: 'username', // Select only the 'username' field
+                        });
+
+                    // Emitting only the usernames of contacts to the user
+                    io.to(socket.id).emit("userListResponse", userProfile.contacts.map(contact => contact.username));
+                }
+            } catch (error) {
+                console.error('Error fetching user contacts:', error.message);
+            }
+        });
 
         socket.on('messageFromServer', (data) => {
             console.log('backend data: ', data);
@@ -28,11 +53,31 @@ export const chatSocket = (server) => {
 
         socket.on('typing', (data) => {
             console.log('typing data: ', data);
-            socket.broadcast.emit('typing', data);
+            socket.broadcast.emit('typingResponse', data);
         });
 
 
+        // socket.on('newUser', (data) => {
+        //     console.log('newUser data: ', data);
+        //     if (!users.includes(data.username)) {
+        //         users.push(data.username);
+        //     }
+        //     socket.emit('newUserResponse', users);
+        //     // socket.broadcast.emit('newUser', users);
+        // });
+
+        // socket.on('disconnect', () => {
+        //     console.log('Client disconnected', socket.id);
+        // });
+
+
+        socket.on('disconnect', () => {
+            console.log('Client disconnected', socket.id);
+            
+        });
+
     })
+
 
 
 
@@ -46,7 +91,7 @@ export const chatSocket = (server) => {
 
     //     socket.on('startChat', ({ senderUserId, recipientUserId }) => {
     //         const room = createRoomIdentifier(senderUserId, recipientUserId);
-            
+
     //         // socket.data.currentChatRoom = room;
 
     //         socket.join(room);
@@ -60,7 +105,7 @@ export const chatSocket = (server) => {
     //     socket.on('sendMessage', async (data) => {
     //         const { email, message, senderUserId, recipientUserId} = data;
     //         console.log("data: ", data);
-            
+
     //         const room = socket.data.currentChatRoom; 
 
     //         console.log(`Message received in room ${room}: ${message}`);

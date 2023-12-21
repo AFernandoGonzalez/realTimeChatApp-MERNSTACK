@@ -6,12 +6,17 @@ import { useProfile } from '../context/ProfileContext';
 const TestChat = () => {
   const [socket, setSocket] = useState(null);
   const [message, setMessage] = useState('');
-  const [handle, setHandle] = useState('');
+  const [userLogged, setUserLogged] = useState([]);
   const [output, setOutput] = useState([]);
   const [feedback, setFeedback] = useState('');
-
   const { userProfile } = useProfile(null);
+
+  const [username, setUsername] = useState('');
+
   console.log('userProfile: ', userProfile);
+  const [userList, setUserList] = useState([]);
+
+  console.log('userList: ', userList);
 
   useEffect(() => {
     const newSocket = io(API_BASE_URL);
@@ -23,9 +28,16 @@ const TestChat = () => {
       setFeedback('');
     });
 
-    newSocket.on('typing', (data) => {
-      setFeedback(`${data.handle} is typing a message...`);
+    newSocket.on('typingResponse', (data) => {
+      setFeedback(`${data.username} is typing a message...`);
     });
+
+    // Listen for user list updates
+    newSocket.on('userListResponse', (data) => {
+      setUserList(data);
+    });
+
+    newSocket.emit('loginUser', userProfile?.username);
 
 
     setSocket(newSocket);
@@ -33,34 +45,31 @@ const TestChat = () => {
     return () => {
       newSocket.disconnect();
     };
-  }, []);
+  }, [userProfile]);
 
 
-  // const changeHandler = (e) => {
-  //   setHandle(e.target.value);
-  // };
   const changeMessageHandler = (e) => {
     setMessage(e.target.value);
     socket.emit('typing', {
-      handle: userProfile.username,
+      username: userProfile.username,
     });
   };
 
   // emit/send events to the server
   const sendMessage = () => {
 
-    if(message.trim() && userProfile.userId !== null ) {
+    if (message.trim() && userProfile.userId !== null) {
       const newSentMessage = {
         message: message,
-        handle: userProfile.username,
+        username: userProfile.username,
       };
       socket.emit('messageFromServer', newSentMessage);
     }
 
-    
-    setHandle('');
     setMessage('');
   };
+
+
 
 
 
@@ -72,10 +81,12 @@ const TestChat = () => {
             <a href="#" className="list-group-item list-group-item-action active" aria-current="true">
               Active User
             </a>
-            <a href="#" className="list-group-item list-group-item-action">User 1</a>
-            <a href="#" className="list-group-item list-group-item-action">User 2</a>
-            <a href="#" className="list-group-item list-group-item-action">User 3</a>
-            <a className="list-group-item list-group-item-action disabled" aria-disabled="true">User 4</a>
+            
+            <ul className="list-group">
+              {userList.map((user, index) => (
+                <a href="#" className="list-group-item list-group-item-action" key={index}>{user}</a>
+              ))}
+            </ul>
           </div>
         </div>
         <div className='col'>
@@ -87,7 +98,7 @@ const TestChat = () => {
                   {output?.map((message, index) => {
                     return (
                       <li className='list-group-item mb-2' key={index}>
-                        <p>{message.handle}: {message.message}</p>
+                        <p>{message.username}: {message.message}</p>
                       </li>
                     )
                   })}
