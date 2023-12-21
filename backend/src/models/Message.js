@@ -1,13 +1,18 @@
 import mongoose from 'mongoose';
 
 const MessageSchema = new mongoose.Schema({
-    user: {
+    senderUserId: {
         type: mongoose.Schema.Types.ObjectId,
         ref: 'User',
         required: true,
         unique: true,
         min: 3,
-        max: 20
+        max: 20 
+    },
+    recipientUserId: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'User',
+        required: true,
     },
     content: {
         type: String,

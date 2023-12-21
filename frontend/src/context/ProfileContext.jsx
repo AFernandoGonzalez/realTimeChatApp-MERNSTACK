@@ -13,8 +13,7 @@ export const useProfile = () => {
 export const ProfileProvider = ({ children }) => {
     const { currentUser } = useAuth();
     const [userProfile, setUserProfile] = useState(null);
-
-    // console.log('userProfile in ProfileProvider:', userProfile);
+    // console.log("userProfile: ", userProfile);
 
     useEffect(() => {
         const fetchUserProfile = async () => {
@@ -23,10 +22,7 @@ export const ProfileProvider = ({ children }) => {
                     // Use the user ID from the currentUser to fetch the profile
                     const response = await axios.get(`${API_BASE_URL}/api/user/profile/${currentUser.user}`);
                     setUserProfile(response.data.profile);
-                    // console.log("user profile: ", response.data.profile);
 
-                    // console.log('currentUser in ProfileProvider:', currentUser);
-                    
 
                 } catch (error) {
                     console.error('Error fetching user profile:', error);

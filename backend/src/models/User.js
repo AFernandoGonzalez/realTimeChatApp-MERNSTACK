@@ -18,6 +18,10 @@ const UserSchema = new mongoose.Schema({
         required: true,
         min: 6
     },
+    contacts: [{
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'User',
+    }],
 })
 
 const User = mongoose.model('User', UserSchema)

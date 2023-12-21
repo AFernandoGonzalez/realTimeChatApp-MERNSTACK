@@ -3,5 +3,5 @@ import {createMessage, getUserMessages } from '../controllers/chatController.js'
 
 export const chatRoutes = express.Router();
 
-chatRoutes.get('/get-message/:userId', getUserMessages);
-chatRoutes.post('/send-message', createMessage);
+chatRoutes.get('/user/:userId/messages', getUserMessages);
+chatRoutes.post('/message', createMessage);
