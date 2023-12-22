@@ -1,37 +1,91 @@
-import Message from '../models/Message.js';
+import Conversation from '../models/Conversation.js';
+import Message from '../models/MessageModel.js';
 
-export const getUserMessages = async (req, res) => {
-    const { userId } = req.params;
+export const getMessages = async (req, res) => {
+    const { otherUserId } = req.params;
+    const userId = req.userId;
 
     try {
-        // Retrieve messages where the user is either the sender or recipient
+        const conversation = await Conversation.findOne({
+            participants: { $all: [userId, otherUserId] },
+        });
+
+        if (!conversation) {
+            return res.status(404).json({ messages: "No conversation found." });
+        }
+
         const messages = await Message.find({
-            $or: [
-                { senderUserId: userId },
-                { recipientUserId: userId },
-            ],
-        }).populate('senderUserId recipientUserId', 'email');
+            conversationId: conversation._id,
+        })
+            .sort({ createdAt: -1 })
+            .limit(10)
+            .populate('sender', 'username');
+
         res.status(200).json({ messages });
     } catch (error) {
-        res.status(404).json({ message: error.message });
+        console.error(error);
+        res.status(500).json({ message: 'Internal Server Error' });
     }
-}
+};
 
-export const createMessage = async (req, res) => {
-    const { senderUserId, recipientUserId, content } = req.body;
-
-    const newMessage = new Message({
-        senderUserId,
-        recipientUserId,
-        content,
-    });
+export const getConversations = async (req, res) => {
+    const userId = req.userId;
 
     try {
-        await newMessage.save();
+        const conversations = await Conversation.find({
+            participants: userId,
+        }).populate({
+            path: 'participants',
+            select: 'username profilePicture',
+        });
+
+        res.status(200).json(conversations);
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({ message: 'Internal Server Error' });
+    }
+};
+
+export const sendMessage = async (req, res) => {
+    const { recipientUserId, message } = req.body;
+    const senderUserId = req.userId;
+
+    try {
+        let conversation = await Conversation.findOne({
+            participants: { $all: [senderUserId, recipientUserId] },
+        });
+
+        if (!conversation) {
+            conversation = new Conversation({
+                participants: [senderUserId, recipientUserId],
+                lastMessage: {
+                    sender: senderUserId,
+                    text: message,
+                },
+            });
+
+            await conversation.save();
+        }
+
+        const newMessage = new Message({
+            conversationId: conversation._id,
+            sender: senderUserId,
+            text: message,
+        });
+
+        await Promise.all([
+            newMessage.save(),
+            conversation.updateOne({
+                lastMessage: {
+                    sender: senderUserId,
+                    text: message,
+                },
+            }),
+        ]);
+
         res.status(201).json(newMessage);
     } catch (error) {
-        res.status(500).json({ message: 'Failed to create message', error: error.message });
+        console.error(error);
+        res.status(500).json({ message: 'Internal Server Error' });
     }
-}
-
-
+};

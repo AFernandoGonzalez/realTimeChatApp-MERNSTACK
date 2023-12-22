@@ -1,12 +1,11 @@
-import UserProfile from "../models/UserProfile.js";
+// import UserProfile from "../models/UserProfile.js";
 import User from "../models/User.js";
 import mongoose from "mongoose";
 
 export const getProfiles = async (req, res) => {
-    const { userId } = req.params;
 
     try {
-        const profile = await UserProfile.findById(userId);
+        const profile = await User.find();
         res.json({ profile });
     } catch (error) {
         console.error(error);
@@ -23,7 +22,7 @@ export const getUserProfile = async (req, res) => {
             return res.status(400).json({ message: 'Invalid userId format' });
         }
 
-        const profile = await UserProfile.findOne({ userId: userId });
+        const profile = await User.findOne({ _id: userId });
         res.json({ profile });
     } catch (error) {
         console.error(error);
@@ -39,7 +38,7 @@ export const addContact = async (req, res) => {
     try {
 
         // Check if the user exists
-        const user = await UserProfile.findOne({ userId });
+        const user = await User.findOne({ userId });
         if (!user) {
             return res.status(404).json({ message: 'User not found' });
         }
@@ -58,7 +57,7 @@ export const addContact = async (req, res) => {
 
         // Add contactId to the user's contacts
         await User.findByIdAndUpdate(userId, { $addToSet: { contacts: contactId } });
-        await UserProfile.findByIdAndUpdate(userId, { $addToSet: { contacts: contactId } });
+        // await UserProfile.findByIdAndUpdate(userId, { $addToSet: { contacts: contactId } });
 
         // Add the contact
         user.contacts.push(contactId);

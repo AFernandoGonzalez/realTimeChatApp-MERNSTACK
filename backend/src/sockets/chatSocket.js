@@ -1,9 +1,9 @@
 // backend/src/sockets/chatSocket.js
 import { Server } from 'socket.io';
 import jwt from 'jsonwebtoken';
-import Message from '../models/Message.js';
+// import Message from '../models/Message.js';
 import User from '../models/User.js';
-import UserProfile from '../models/UserProfile.js';
+// import UserProfile from '../models/UserProfile.js';
 
 const FRONTEND_URL = process.env.FRONTEND_MAIN_URL || 'http://localhost:3000';
 
@@ -29,7 +29,7 @@ export const chatSocket = (server) => {
             try {
                 const user = await User.findOne({ username });
                 if (user) {
-                    const userProfile = await UserProfile.findOne({ userId: user._id })
+                    const userProfileContacts = await User.findOne({ userId: user._id })
                         .populate({
                             path: 'contacts',
                             model: 'User',
@@ -37,7 +37,7 @@ export const chatSocket = (server) => {
                         });
 
                     // Emitting only the usernames of contacts to the user
-                    io.to(socket.id).emit("userListResponse", userProfile.contacts.map(contact => contact.username));
+                    io.to(socket.id).emit("userListResponse", userProfileContacts.contacts.map(contact => contact.username));
                 }
             } catch (error) {
                 console.error('Error fetching user contacts:', error.message);

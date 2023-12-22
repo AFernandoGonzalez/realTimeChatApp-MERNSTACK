@@ -1,5 +1,5 @@
 import User from '../models/User.js';
-import UserProfile from '../models/UserProfile.js';
+// import UserProfile from '../models/UserProfile.js';
 import bcrypt from 'bcrypt';
 import jwt from 'jsonwebtoken';
 
@@ -54,12 +54,12 @@ export const registerUser = async (req, res) => {
         const savedUser = await newUser.save();
 
         // registerUser after saving the user
-        const newProfile = new UserProfile({
-            userId: savedUser._id,
-            username: savedUser.username,
-            email: savedUser.email,
-        });
-        await newProfile.save();
+        // const newProfile = new UserProfile({
+        //     userId: savedUser._id,
+        //     username: savedUser.username,
+        //     email: savedUser.email,
+        // });
+        // await newProfile.save();
 
         // Create a token for the new user
         const token = jwt.sign({ userId: newUser._id }, process.env.JWT_SECRET, { expiresIn: '1d' });
