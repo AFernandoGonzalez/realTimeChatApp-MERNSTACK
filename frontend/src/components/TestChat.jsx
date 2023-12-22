@@ -1,7 +1,8 @@
 import { useEffect, useState } from 'react'
 import { io } from 'socket.io-client';
 import { API_BASE_URL } from '../constants';
-import { useProfile } from '../context/ProfileContext';
+// import { useProfile } from '../context/ProfileContext';
+import { useAuth } from '../context/AuthContext';
 
 const TestChat = () => {
   const [socket, setSocket] = useState(null);
@@ -9,15 +10,17 @@ const TestChat = () => {
   const [userLogged, setUserLogged] = useState([]);
   const [output, setOutput] = useState([]);
   const [feedback, setFeedback] = useState('');
-  const { userProfile } = useProfile(null);
-
+  const { currentUser } = useAuth(null);
   const [username, setUsername] = useState('');
-
-  console.log('userProfile: ', userProfile);
   const [userList, setUserList] = useState([]);
+  const [isLoading, setIsLoading] = useState(true);
+  // make a global state for the conversation so that we can use it in the chat window anywhere
+  const [conversation, setConversation] = useState([]);
+  const [selectedConversation, setSelectedConversation] = useState(null);
 
-  console.log('userList: ', userList);
 
+  // console.log('currentUser: ', currentUser);
+  console.log('conversation: ', selectedConversation);
   useEffect(() => {
     const newSocket = io(API_BASE_URL);
 
@@ -37,21 +40,41 @@ const TestChat = () => {
       setUserList(data);
     });
 
-    newSocket.emit('loginUser', userProfile?.username);
+    // newSocket.emit('loginUser', userProfile?.username);
+
+
+    //fetching the messages from the server
+    const fetchMessages = async () => {
+      try {
+        const response = await fetch(`${API_BASE_URL}/api/chat/conversations`, {
+          method: 'GET',
+          headers: {
+            'Content-Type': 'application/json',
+            Authorization: `Bearer ${currentUser?.token}`,
+          }
+        });
+        const data = await response.json();
+        setConversation(data);
+        setIsLoading(false);
+      } catch (error) {
+        console.error(error);
+      }
+    };
+
+    fetchMessages();
 
 
     setSocket(newSocket);
-
     return () => {
       newSocket.disconnect();
     };
-  }, [userProfile]);
+  }, []);
 
 
   const changeMessageHandler = (e) => {
     setMessage(e.target.value);
     socket.emit('typing', {
-      username: userProfile.username,
+      // username: userProfile.username,
     });
   };
 
@@ -70,6 +93,9 @@ const TestChat = () => {
   };
 
 
+  const handleConversationClick = (conversationId) => {
+    setSelectedConversation(conversationId);
+  };
 
 
 
@@ -93,15 +119,40 @@ const TestChat = () => {
               Conversations
             </a>
             <ul className="list-group">
-              {['user 1', 'user2', 'user3'].map((user, index) => (
-                <li className='list-group-item' key={index}>
-                  <img src="..." className="img-thumbnail" alt="..." />
-                  <a
-                    href="#"
-                    className="list-group-item list-group-item-action" key={index}>{user}
-                  </a>
-                </li>
-              ))}
+              {isLoading ? (
+                <div className="spinner-border text-primary" role="status">
+                  <span className="visually-hidden">Loading...</span>
+                </div>
+              ) : (
+                <div className="list-group">
+                  {conversation?.map((conversationItem, index) => (
+                    <div key={index}>
+                      {conversationItem.participants.map((participant, participantIndex) => (
+                        <div
+                          className={`list-group-item d-flex align-items-center ${selectedConversation === conversationItem._id ? 'bg-success' : ''}`}
+                          key={participantIndex}
+                          onClick={() => handleConversationClick(conversationItem._id)}
+                        >
+                          <img className="rounded-circle" style={{ width: "30px", height: "30px" }} src={participant.profilePicture} alt=""></img>
+                          <div className="ms-2">
+                            <a href="#" className="list-group-item-action">{participant.username}</a>
+                            {conversationItem.lastMessage && (
+                              <div>
+                                {currentUser.userId !== conversationItem.lastMessage.sender ? "You" : "---"}
+                                <p className="alert alert-primary m-0" style={{ fontSize: "12px" }}>
+                                  Last message: {conversationItem.lastMessage.text.substring(0, 10) + "..."}
+                                </p>
+                              </div>
+                            )}
+
+                          </div>
+                        </div>
+                      ))}
+                    </div>
+                  ))}
+                </div>
+
+              )}
             </ul>
           </div>
           <div className="list-group">
