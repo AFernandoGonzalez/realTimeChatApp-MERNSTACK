@@ -16,7 +16,10 @@ const TestChat = () => {
   const [isLoading, setIsLoading] = useState(true);
   // make a global state for the conversation so that we can use it in the chat window anywhere
   const [conversation, setConversation] = useState([]);
+  // selectedConversation has an id
   const [selectedConversation, setSelectedConversation] = useState(null);
+  const [selectedCurrentConversation, setSelectedCurrentConversation] = useState(null);
+
 
 
   // console.log('currentUser: ', currentUser);
@@ -44,7 +47,7 @@ const TestChat = () => {
 
 
     //fetching the messages from the server
-    const fetchMessages = async () => {
+    const fetchConversation = async () => {
       try {
         const response = await fetch(`${API_BASE_URL}/api/chat/conversations`, {
           method: 'GET',
@@ -55,20 +58,49 @@ const TestChat = () => {
         });
         const data = await response.json();
         setConversation(data);
+        console.log('data: ', data);
         setIsLoading(false);
       } catch (error) {
         console.error(error);
       }
     };
+    fetchConversation();
 
-    fetchMessages();
+    //fetching the messages from the server
+    const fetchCurrentMessages = async () => {
+      try {
+        // Check if there's a selected conversation
+        if (selectedConversation) {
+          const response = await fetch(`${API_BASE_URL}/api/chat/messages/${selectedConversation}`, {
+            method: 'GET',
+            headers: {
+              'Content-Type': 'application/json',
+              Authorization: `Bearer ${currentUser?.token}`,
+            }
+          });
+
+          if (response.ok) {
+            const data = await response.json();
+            setSelectedCurrentConversation(data);
+          } else {
+            console.error(`Failed to fetch messages. Status: ${response.status}`);
+          }
+        }
+      } catch (error) {
+        console.error(error);
+      } finally {
+        setIsLoading(false);
+      }
+    };
+
+    fetchCurrentMessages();
 
 
     setSocket(newSocket);
     return () => {
       newSocket.disconnect();
     };
-  }, []);
+  }, [selectedConversation]);
 
 
   const changeMessageHandler = (e) => {
@@ -93,8 +125,8 @@ const TestChat = () => {
   };
 
 
-  const handleConversationClick = (conversationId) => {
-    setSelectedConversation(conversationId);
+  const handleConversationClick = (participantId) => {
+    setSelectedConversation(participantId);
   };
 
 
@@ -129,9 +161,9 @@ const TestChat = () => {
                     <div key={index}>
                       {conversationItem.participants.map((participant, participantIndex) => (
                         <div
-                          className={`list-group-item d-flex align-items-center ${selectedConversation === conversationItem._id ? 'bg-success' : ''}`}
+                          className={`list-group-item d-flex align-items-center ${selectedConversation === participant._id ? 'bg-primary-subtle' : ''}`}
                           key={participantIndex}
-                          onClick={() => handleConversationClick(conversationItem._id)}
+                          onClick={() => handleConversationClick(participant._id)}
                         >
                           <img className="rounded-circle" style={{ width: "30px", height: "30px" }} src={participant.profilePicture} alt=""></img>
                           <div className="ms-2">
@@ -208,51 +240,61 @@ const TestChat = () => {
         </div> */}
         <div className='col'>
           <div id='chat-window'>
-            <div className="card" >
-              <div className="card-body " style={{ minHeight: "50vh", maxHeight: "60vh" }}>
-                <h5 className="card-title">Chat</h5>
-                <ul className="list-group">
-                  <span className="">Select a conversation </span>
-                </ul>
-                <div className="fst-italic text-secondary" role="alert">
-
-                </div>
-              </div>
-            </div>
-            <div className="card" >
-              <div className="card-body " style={{ minHeight: "50vh", maxHeight: "60vh" }}>
-                <h5 className="card-title">Chat</h5>
-                <ul className="list-group">
-                  <span className="">User Name </span>
-                </ul>
-                <div className="overflow-auto" style={{ maxHeight: '50vh' }}>
+            {selectedCurrentConversation ? (
+              <div className="card" >
+                <div className="card-body " style={{ minHeight: "50vh", maxHeight: "60vh" }}>
+                  <h5 className="card-title">Chat</h5>
                   <ul className="list-group">
-                    {['hi', 'hello', 'how are you', 'a', 'b', 'c', 'dd'].map((message, index) => (
-                      <li className='list-group-item mb-2' key={index}>
-                        <p className='alert alert-primary'>me: {message}</p>
-                      </li>
-                    ))}
+                    <span className="">User Name </span>
                   </ul>
+                  <div className="overflow-auto" style={{ maxHeight: '50vh' }}>
+                    <ul className="list-group">
+                      {selectedCurrentConversation.messages.map((message, index) => (
+                        <li className='list-group-item mb-2' key={index}>
+                          {message.sender._id === currentUser.userId ? (
+                            <p className='alert alert-primary text-end'>You: {message.text}</p>
+                          ) : (
+                            <p className='alert alert-secondary text-start'>{message.sender.username}: {message.text}</p>
+                          )}
+                        </li>
+                      ))}
+                    </ul>
+                  </div>
+
+
+
+                  <div className="fst-italic text-secondary" role="alert">
+
+                  </div>
                 </div>
-
-                <div className="fst-italic text-secondary" role="alert">
-
+                <div>
+                  <div className="input-group mb-3">
+                    <input
+                      type="text"
+                      className="form-control"
+                      placeholder="Message"
+                      aria-label="Message"
+                      value={message}
+                      onChange={changeMessageHandler}
+                    />
+                    <button className="btn btn-primary" onClick={sendMessage} >Send</button>
+                  </div>
                 </div>
               </div>
-              <div>
-                <div className="input-group mb-3">
-                  <input
-                    type="text"
-                    className="form-control"
-                    placeholder="Message"
-                    aria-label="Message"
-                    value={message}
-                    onChange={changeMessageHandler}
-                  />
-                  <button className="btn btn-primary" onClick={sendMessage} >Send</button>
+            ) : (
+              <div className="card" >
+                <div className="card-body " style={{ minHeight: "50vh", maxHeight: "60vh" }}>
+                  <h5 className="card-title">Chat</h5>
+                  <ul className="list-group">
+                    <span className="">Select a conversation </span>
+                  </ul>
+                  <div className="fst-italic text-secondary" role="alert">
+
+                  </div>
                 </div>
               </div>
-            </div>
+            )}
+
           </div>
 
 
