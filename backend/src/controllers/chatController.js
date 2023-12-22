@@ -17,8 +17,7 @@ export const getMessages = async (req, res) => {
         const messages = await Message.find({
             conversationId: conversation._id,
         })
-            .sort({ createdAt: -1 })
-            .limit(10)
+            .sort({ createdAt: 1 })
             .populate('sender', 'username');
 
         res.status(200).json({ messages });

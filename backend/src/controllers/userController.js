@@ -30,6 +30,32 @@ export const getUserProfile = async (req, res) => {
     }
 };
 
+
+export const getUserProfileByText = async (req, res) => {
+    const searchText = req.query.text;
+    try {
+
+        if (!searchText || searchText.trim() === '') {
+            return res.status(400).json({ message: 'Search text cannot be empty' });
+        }
+
+        const profiles = await User.find({
+            username: { $regex: new RegExp(`^${searchText}$`, 'i') }
+        });
+
+        if (profiles.length === 0) {
+            return res.status(404).json({ message: 'No profiles found' });
+        }
+
+        res.status(200).json(profiles);
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({ error: 'Internal server error' });
+    }
+};
+
+
+
 export const addContact = async (req, res) => {
     const { userId, contactId } = req.body;
 

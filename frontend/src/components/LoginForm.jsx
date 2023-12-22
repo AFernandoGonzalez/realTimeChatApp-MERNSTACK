@@ -5,7 +5,7 @@ import { useNavigate } from 'react-router-dom';
 
 import { io } from 'socket.io-client';
 import { API_BASE_URL } from '../constants';
-import { useProfile } from '../context/ProfileContext';
+// import { useProfile } from '../context/ProfileContext';
 
 export const LoginForm = () => {
     const [email, setEmail] = useState('');
