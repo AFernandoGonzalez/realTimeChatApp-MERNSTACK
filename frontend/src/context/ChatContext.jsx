@@ -135,6 +135,7 @@ export const ChatProvider = ({ children }) => {
             const data = await fetchSearchUsersByTextService(searchText, currentUser?.token);
             if (data[0]._id === currentUser.userId) {
                 console.log("You cannot add yourself");
+                toast.error(<div>You cannot chat with yourself</div>);
                 return;
             }
 
@@ -143,7 +144,24 @@ export const ChatProvider = ({ children }) => {
                 setSelectedConversation(foundConversation.participants[0]._id);
                 return;
             }
-            
+
+            const mockConversation = {
+                mock: true,
+                lastMessage: {
+                    message: "No messages yet",
+                    sender: "",
+                },
+                _id: Date.now(),
+                participants: [
+                    {
+                        _id: data[0]._id,
+                        username: data[0].username,
+                        profilePicture: data[0].profilePicture,
+                    },
+                ],
+            };
+
+            setConversation((prevConversation) => [...prevConversation, mockConversation]);
 
             setContactFound(data);
         } catch (error) {
