@@ -3,7 +3,7 @@ import { AuthProvider } from './context/AuthContext';
 import { Home } from './pages/Home';
 import { Login } from './pages/Login';
 import { ChatProvider } from './context/ChatContext';
-import TestChat from './components/TestChat';
+import Chat from './components/Chat';
 import { ProtectedRoute } from './ProtectedRoute';
 
 function App() {
@@ -18,7 +18,7 @@ function App() {
           element={
             <ChatProvider>
               <ProtectedRoute>
-                <TestChat />
+                <Chat />
               </ProtectedRoute>
             </ChatProvider>}
         />

@@ -1,12 +1,7 @@
 import { useEffect, useState } from 'react'
-import { io } from 'socket.io-client';
-import { API_BASE_URL } from '../constants';
-import { useAuth } from '../context/AuthContext';
-
 import { useChat } from '../context/ChatContext';
 
-
-const TestChat = () => {
+const Chat = () => {
 
   const {
     socket, setSocket,
@@ -263,6 +258,7 @@ const TestChat = () => {
   // }
 
 
+  console.log("selectedConversation CHAT", selectedConversation);
 
   return (
     <div className='container m-4'>
@@ -300,7 +296,7 @@ const TestChat = () => {
                         >
                           <img className="rounded-circle" style={{ width: "30px", height: "30px" }} src={participant.profilePicture} alt=""></img>
                           <div className="ms-2">
-                            <a href="#" className="list-group-item-action">{participant.username}</a>
+                            <a href="" className="list-group-item-action">{participant.username}</a>
                             {conversationItem.lastMessage && (
                               <div>
                                 {currentUser.userId !== conversationItem.lastMessage.sender ? "You" : "---"}
@@ -320,20 +316,6 @@ const TestChat = () => {
               )}
             </ul>
           </div>
-          {/* <div className="list-group">
-            <a href="#" className="list-group-item list-group-item-action active" aria-current="true">
-              Active User
-            </a>
-
-            <ul className="list-group">
-              {userList.map((user, index) => (
-                <a
-                  href="#"
-                  className="list-group-item list-group-item-action" key={index}>{user}
-                </a>
-              ))}
-            </ul>
-          </div> */}
         </div>
 
         <div className='col'>
@@ -392,14 +374,11 @@ const TestChat = () => {
                 </div>
               </div>
             )}
-
           </div>
-
-
         </div>
       </div>
     </div>
   )
 }
 
-export default TestChat
+export default Chat

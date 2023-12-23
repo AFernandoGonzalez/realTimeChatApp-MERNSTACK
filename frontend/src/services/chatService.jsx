@@ -1,5 +1,5 @@
 import { API_BASE_URL } from '../constants';
-
+import { toast } from 'react-toastify';
 
 export const fetchConversationService = async (currentUserToken) => {
     try {
@@ -13,11 +13,11 @@ export const fetchConversationService = async (currentUserToken) => {
         const data = await response.json();
         return data;
     } catch (error) {
-        console.error(`Failed to fetch conversations. Status: ${error.message}`);
+        // console.error(`Failed to fetch conversations. Status: ${error.message}`);
+        toast.error(`Failed to fetch conversations. Status: ${error.message}`);
         throw error;
     }
 };
-
 
 export const fetchCurrentMessagesService = async (selectedConversation, currentUserToken) => {
     try {
@@ -77,7 +77,8 @@ export const fetchSearchUsersByTextService = async (searchText, currentUserToken
         const data = await response.json();
         return data;
     } catch (error) {
-        console.error(`Failed to search users. Status: ${error.message}`);
+        // console.error(`Failed to search users. Status: ${error.message}`);
+        toast.error(`Failed to search users. Status: ${error.message}`);
         throw error;
     }
 };

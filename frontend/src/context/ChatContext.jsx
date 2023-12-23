@@ -1,5 +1,6 @@
 // ChatContext.js
 import { createContext, useContext, useState, useEffect } from 'react';
+import { toast } from 'react-toastify';
 import { io } from 'socket.io-client';
 import { API_BASE_URL } from '../constants';
 import { useAuth } from './AuthContext';
@@ -51,6 +52,7 @@ export const ChatProvider = ({ children }) => {
                 setIsLoading(false);
             } catch (error) {
                 console.error(`Failed to fetch conversations in ChatContext. Status: ${error.message}`);
+                toast.error(`Failed to fetch conversations in ChatContext. Status: ${error.message}`);
                 throw error;
             }
         };
@@ -61,7 +63,8 @@ export const ChatProvider = ({ children }) => {
                 setSelectedCurrentConversation(data);
                 setIsLoading(false);
             } catch (error) {
-                console.error( `Failed to fetch messages in ChatContext. Status: ${error.message}`);
+                console.error(`Failed to fetch messages in ChatContext. Status: ${error.message}`);
+                toast.error(`Failed to fetch messages in ChatContext. Status: ${error.message}`);
                 throw error;
             }
         };
@@ -96,6 +99,7 @@ export const ChatProvider = ({ children }) => {
                 setConversation(data);
             } catch (error) {
                 console.error(`Failed to fetch conversations in ChatContext. Status: ${error.message}`);
+                toast.error(`Failed to fetch conversations in ChatContext. Status: ${error.message}`);
                 throw error;
             }
 
@@ -104,6 +108,7 @@ export const ChatProvider = ({ children }) => {
                 setSelectedCurrentConversation(data);
             } catch (error) {
                 console.error(`Failed to fetch messages in ChatContext. Status: ${error.message}`);
+                toast.error(`Failed to fetch messages in ChatContext. Status: ${error.message}`);
                 throw error;
             }
 
@@ -132,11 +137,23 @@ export const ChatProvider = ({ children }) => {
                 console.log("You cannot add yourself");
                 return;
             }
+
+            if (conversation.find((c) => c.participants[0]._id === data[0]._id)) {
+                const foundConversation = conversation.find((c) => c.participants[0]._id === data[0]._id);
+                setSelectedConversation(foundConversation.participants[0]._id);
+                return;
+            }
+            
+
             setContactFound(data);
-            setSearchText('');
         } catch (error) {
-            console.error(`Failed to search for contact in ChatContext. Status: ${error.message}`);
+            // console.error(`Failed to search for contact in ChatContext. Status: ${error.message}`);
+            // toast.error(<div>Failed to search for contact <strong>{searchText}</strong>. {error.message}</div>);
+            toast.error(<div>Contact <strong>{searchText}</strong> not found.</div>);
             throw error;
+        } finally {
+            // Clear the searchText after the search is complete, whether it succeeds or fails
+            setSearchText('');
         }
     };
 
