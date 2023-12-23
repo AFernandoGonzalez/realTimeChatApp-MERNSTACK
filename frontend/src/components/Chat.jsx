@@ -23,100 +23,6 @@ const Chat = () => {
     searchForContact
   } = useChat();
 
-  // const [socket, setSocket] = useState(null);
-  // const { currentUser } = useAuth(null);
-  // const [message, setMessage] = useState([]);
-  // // const [userLogged, setUserLogged] = useState([]);
-  // const [output, setOutput] = useState([]);
-  // const [feedback, setFeedback] = useState('');
-  // // const [username, setUsername] = useState('');
-  // const [userList, setUserList] = useState([]);
-  // const [isLoading, setIsLoading] = useState(true);
-  // // make a global state for the conversation so that we can use it in the chat window anywhere
-  // const [conversation, setConversation] = useState([]);
-  // // selectedConversation has an id
-  // const [selectedConversation, setSelectedConversation] = useState(null);
-  // const [selectedCurrentConversation, setSelectedCurrentConversation] = useState(null);
-  // const [searchText, setSearchText] = useState('');
-  // const [contactFound, setContactFound] = useState([]);;
-
-
-  // useEffect(() => {
-  //   const newSocket = io(API_BASE_URL);
-  //   // listen for events from the server
-  //   newSocket.on('messageResponse', (data) => {
-  //     // adding previous output to the new output array 
-  //     setOutput((prevOutput) => [...prevOutput, data]);
-  //     setFeedback('');
-  //   });
-
-  //   newSocket.on('typingResponse', (data) => {
-  //     setFeedback(`${data.username} is typing a message...`);
-  //   });
-
-  //   // Listen for user list updates
-  //   newSocket.on('userListResponse', (data) => {
-  //     setUserList(data);
-  //   });
-
-  //   newSocket.emit('loginUser', currentUser?.username);
-
-
-  //   //fetching the messages from the server
-  //   const fetchConversation = async () => {
-  //     try {
-  //       const response = await fetch(`${API_BASE_URL}/api/chat/conversations`, {
-  //         method: 'GET',
-  //         headers: {
-  //           'Content-Type': 'application/json',
-  //           Authorization: `Bearer ${currentUser?.token}`,
-  //         }
-  //       });
-  //       const data = await response.json();
-  //       setConversation(data);
-  //       console.log('Conversation data: ', data);
-  //       setIsLoading(false);
-  //     } catch (error) {
-  //       console.error(error);
-  //     }
-  //   };
-  //   fetchConversation();
-
-  //   //fetching the messages from the server
-  //   const fetchCurrentMessages = async () => {
-  //     try {
-  //       // Check if there's a selected conversation
-  //       if (selectedConversation) {
-  //         const response = await fetch(`${API_BASE_URL}/api/chat/messages/${selectedConversation}`, {
-  //           method: 'GET',
-  //           headers: {
-  //             'Content-Type': 'application/json',
-  //             Authorization: `Bearer ${currentUser?.token}`,
-  //           }
-  //         });
-
-  //         if (response.ok) {
-  //           const data = await response.json();
-  //           setSelectedCurrentConversation(data);
-  //         } else {
-  //           console.error(`Failed to fetch messages. Status: ${response.status}`);
-  //         }
-  //       }
-  //     } catch (error) {
-  //       console.error(error);
-  //     } finally {
-  //       setIsLoading(false);
-  //     }
-  //   };
-  //   fetchCurrentMessages();
-
-
-  //   setSocket(newSocket);
-  //   return () => {
-  //     newSocket.disconnect();
-  //   };
-  // }, [selectedConversation, currentUser?.token, currentUser?.username]);
-
 
   useEffect(() => {
     // listen for events from the server
@@ -124,141 +30,12 @@ const Chat = () => {
 
   }, []);
 
+  
 
-  // const changeMessageHandler = async (e) => {
-  //   // e.preventDefault();
-  //   setMessage(e.target.value);
-  //   // socket.emit('typing', {
-  //   //   username: currentUser.username,
-  //   // });
-  // };
+  // console.log("conversation CHAT: ", conversation.find((conversationItem) => conversationItem.mock));
 
-  // // emit/send events to the server
-  // const sendMessage = async (e) => {
-  //   e.preventDefault();
-
-  //   try {
-  //     const response = await fetch(`${API_BASE_URL}/api/chat/send-message`, {
-  //       method: 'POST',
-  //       headers: {
-  //         'Content-Type': 'application/json',
-  //         Authorization: `Bearer ${currentUser?.token}`,
-  //       },
-  //       body: JSON.stringify({
-  //         recipientUserId: selectedConversation,
-  //         message: message,
-  //       }),
-  //     });
-  //     const data = await response.json();
-  //     setMessage((prevMessage) => [...prevMessage, data]);
-
-  //     console.log('message data: ', data);
-
-  //     //have a context for the conversation to avoid fetching it again
-  //     const fetchConversation = async () => {
-  //       try {
-  //         const response = await fetch(`${API_BASE_URL}/api/chat/conversations`, {
-  //           method: 'GET',
-  //           headers: {
-  //             'Content-Type': 'application/json',
-  //             Authorization: `Bearer ${currentUser?.token}`,
-  //           }
-  //         });
-  //         const data = await response.json();
-  //         setConversation(data);
-  //         console.log('Conversation data: ', data);
-  //         setIsLoading(false);
-  //       } catch (error) {
-  //         console.error(error);
-  //       }
-  //     };
-  //     fetchConversation();
-
-  //     // have a context for the current conversation to avoid fetching it again
-  //     const fetchCurrentMessages = async () => {
-  //       try {
-  //         // Check if there's a selected conversation
-  //         if (selectedConversation) {
-  //           const response = await fetch(`${API_BASE_URL}/api/chat/messages/${selectedConversation}`, {
-  //             method: 'GET',
-  //             headers: {
-  //               'Content-Type': 'application/json',
-  //               Authorization: `Bearer ${currentUser?.token}`,
-  //             }
-  //           });
-
-  //           if (response.ok) {
-  //             const data = await response.json();
-  //             setSelectedCurrentConversation(data);
-  //           } else {
-  //             console.error(`Failed to fetch messages. Status: ${response.status}`);
-  //           }
-  //         }
-  //       } catch (error) {
-  //         console.error(error);
-  //       } finally {
-  //         setIsLoading(false);
-  //       }
-  //     };
-  //     fetchCurrentMessages();
-
-  //     setIsLoading(false);
-
-
-  //   } catch (error) {
-  //     console.error(error);
-  //   }
-
-  //   // if (message.trim() && currentUser.userId !== null) {
-  //   //   const newSentMessage = {
-  //   //     message: message,
-  //   //     username: currentUser.username,
-  //   //   };
-  //   //   socket.emit('messageFromServer', newSentMessage);
-  //   // }
-
-  //   setMessage('');
-  // };
-
-  // const handleConversationClick = (participantId) => {
-  //   setSelectedConversation(participantId);
-  // };
-
-  // const changeSearchContactHandler = async (e) => {
-  //   setSearchText(e.target.value);
-  // }
-
-
-  // const searchForContact = async (e) => {
-  //   e.preventDefault();
-  //   if (!searchText || searchText.trim() === '') {
-  //     return;
-  //   }
-  //   try {
-  //     const response = await fetch(`${API_BASE_URL}/api/user/profile/search?text=${searchText}`, {
-  //       method: 'GET',
-  //       headers: {
-  //         'Content-Type': 'application/json',
-  //         Authorization: `Bearer ${currentUser?.token}`,
-  //       },
-  //     });
-  //     const data = await response.json();
-  //     if (data[0]._id === currentUser.userId) {
-  //       console.log("You cannot add yourself");
-  //       return;
-  //     }
-  //     setContactFound(data);
-  //     setSearchText('');
-
-
-
-  //   } catch (error) {
-  //     console.error({ message: error.message });
-  //   }
-  // }
-
-
-  console.log("selectedConversation CHAT", selectedConversation);
+  // console.log("selectedConversation ", selectedConversation);
+  // console.log("selectedCurrentConversation CHAT: ", selectedCurrentConversation);
 
   return (
     <div className='container m-4'>
@@ -301,7 +78,7 @@ const Chat = () => {
                               <div>
                                 {currentUser.userId !== conversationItem.lastMessage.sender ? "You" : "---"}
                                 <p className="alert alert-primary m-0" style={{ fontSize: "12px" }}>
-                                  Last message: {conversationItem.lastMessage.text.substring(0, 10) + "..."}
+                                  Last message: {conversationItem.lastMessage.text}
                                 </p>
                               </div>
                             )}
@@ -369,6 +146,7 @@ const Chat = () => {
                     <span className="">Select a conversation </span>
                   </ul>
                   <div className="fst-italic text-secondary" role="alert">
+                    
 
                   </div>
                 </div>
