@@ -36,6 +36,7 @@ const Chat = () => {
 
   // console.log("selectedConversation ", selectedConversation);
   console.log("selectedCurrentConversation CHAT: ", selectedCurrentConversation);
+  console.log("selectedConversation CHAT: ", selectedConversation);
 
   return (
     <div className='container m-4'>
@@ -69,7 +70,7 @@ const Chat = () => {
                         <div
                           className={`list-group-item d-flex align-items-center ${selectedConversation === participant._id ? 'bg-primary-subtle' : ''}`}
                           key={participantIndex}
-                          onClick={() => handleConversationClick(participant._id)}
+                          onClick={() => handleConversationClick(participant._id || selectedConversation)}
                         >
                           <img className="rounded-circle" style={{ width: "30px", height: "30px" }} src={participant.profilePicture} alt=""></img>
                           <div className="ms-2">

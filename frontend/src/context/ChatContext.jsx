@@ -47,12 +47,37 @@ export const ChatProvider = ({ children }) => {
 
         const fetchConversation = async () => {
 
+            const mockConversationId = conversation.find((conversationItem) => conversationItem.mock);
+
+            console.log("mockConversation ", mockConversationId);
+
+            // if (mockConversation) {
+            //     // Set the selectedConversation with the mock conversation
+            //     // setSelectedCurrentConversation({
+            //     //     ...mockConversation,
+            //     //     messages: [] // Ensure there's a messages array
+            //     // });
+
+            //     // setSelectedConversation(mockConversation);
+               
+            //     setSelectedConversation(mockConversation.participants[0]._id);
+            //     console.log("mockConversation.participants[0]._id ", mockConversation.participants[0]._id);
+            //     setIsLoading(false); // Update isLoading flag
+            //     return;
+            // }
+
+            // if (mockConversationId) {
+
+            //     setSelectedConversation(mockConversationId);
+            //     return;
+            // }
+
             try {
                 const data = await fetchConversationService(currentUser?.token);
                 setConversation(data);
+                console.log("fetchConversation data ", data);
                 setIsLoading(false);
             } catch (error) {
-                // console.error(`Failed to fetch conversations in ChatContext. Status: ${error.message}`);
                 toast.error(`Failed to fetch conversations in ChatContext. Status: ${error.message}`);
                 throw error;
             }
@@ -62,25 +87,16 @@ export const ChatProvider = ({ children }) => {
             const mockConversation = conversation.find((conversationItem) => conversationItem.mock);
 
             if (mockConversation) {
-                // Display the data of the mock conversation
-                console.log("Mock Conversation Data:", mockConversation);
-        
                 // Set the selectedConversation with the mock conversation
                 setSelectedCurrentConversation({
                     ...mockConversation,
                     messages: [] // Ensure there's a messages array
                 });
-                
+
                 setSelectedConversation(mockConversation);
-                console.log("selectedConversation after mock: ", selectedConversation);
-                setIsLoading(false); // Update isLoading flag
+                // setIsLoading(false); // Update isLoading flag
                 return;
             }
-
-            // Continue with fetching from the database
-            // console.log("fetchCurrentMessages conversation ", conversation);
-            // console.log("fetchCurrentMessages selectedCurrentConversation ", selectedCurrentConversation);
-
 
             try {
                 const data = await fetchCurrentMessagesService(selectedConversation, currentUser?.token);
@@ -88,7 +104,6 @@ export const ChatProvider = ({ children }) => {
                 setSelectedCurrentConversation(data);
                 setIsLoading(false);
             } catch (error) {
-                // console.error(`Failed to fetch messages in ChatContext. Status: ${error.message}`);
                 toast.error(`Failed to fetch messages in ChatContext. Status: ${error.message}`);
                 throw error;
             }
@@ -113,10 +128,8 @@ export const ChatProvider = ({ children }) => {
         try {
             try {
                 const data = await sendMessageService(message, selectedConversation, currentUser?.token);
-                // setOutput((prevOutput) => [...prevOutput, data]);
                 setMessage((prevMessage) => [...prevMessage, data])
             } catch (error) {
-                // console.error(`Failed to send message in ChatContext. Status: ${error.message}`);
                 toast.error(`Failed to send message in ChatContext. Status: ${error.message}`);
                 throw error;
             }
@@ -125,7 +138,6 @@ export const ChatProvider = ({ children }) => {
                 const data = await fetchConversationService(currentUser?.token);
                 setConversation(data);
             } catch (error) {
-                // console.error(`Failed to fetch conversations in ChatContext. Status: ${error.message}`);
                 toast.error(`Failed to fetch conversations in ChatContext. Status: ${error.message}`);
                 throw error;
             }
@@ -134,7 +146,6 @@ export const ChatProvider = ({ children }) => {
                 const data = await fetchCurrentMessagesService(selectedConversation, currentUser?.token);
                 setSelectedCurrentConversation(data);
             } catch (error) {
-                // console.error(`Failed to fetch messages in ChatContext. Status: ${error.message}`);
                 toast.error(`Failed to fetch messages in ChatContext. Status: ${error.message}`);
                 throw error;
             }
@@ -146,6 +157,7 @@ export const ChatProvider = ({ children }) => {
     };
 
     const handleConversationClick = (participantId) => {
+        console.log("handleConversationClick participantId ", participantId);
         setSelectedConversation(participantId);
     };
 
@@ -161,8 +173,6 @@ export const ChatProvider = ({ children }) => {
         try {
             const searchedUser = await fetchSearchUsersByTextService(searchText, currentUser?.token);
 
-            console.log("1. searchedUser ", searchedUser);
-
             if (searchedUser[0]._id === currentUser.userId) {
                 // console.log("You cannot add yourself");
                 toast.error(<div>You cannot chat with yourself</div>);
@@ -172,13 +182,10 @@ export const ChatProvider = ({ children }) => {
             // Check if a conversation with the searched user exists
             const existingConversation = conversation.find((c) => c.participants[0]._id === searchedUser[0]._id);
 
-            console.log("2. Found Existing Convo: ", existingConversation);
-
             if (existingConversation) {
                 setSelectedConversation(existingConversation.participants[0]._id);
                 return;
             } else {
-                // If the conversation doesn't exist, create a mock conversation
                 const mockConversation = {
                     mock: true,
                     lastMessage: {
@@ -195,11 +202,7 @@ export const ChatProvider = ({ children }) => {
                     _id: Date.now(),
                 };
 
-                // Add the mock conversation to the conversation state
-                setConversation((prevConversation) => [...prevConversation, mockConversation]); 
-            
-                // setSelectedConversation(mockConversation.participants[0]._id);
-                console.log("3. Mock Conversation: ", mockConversation.participants[0]._id);
+                setConversation((prevConversation) => [...prevConversation, mockConversation]);
             }
 
 
@@ -209,12 +212,9 @@ export const ChatProvider = ({ children }) => {
 
 
         } catch (error) {
-            // console.error(`Failed to search for contact in ChatContext. Status: ${error.message}`);
-            // toast.error(<div>Failed to search for contact <strong>{searchText}</strong>. {error.message}</div>);
             toast.error(<div>Contact <strong>{searchText}</strong> not found.</div>);
             throw error;
         } finally {
-            // Clear the searchText after the search is complete, whether it succeeds or fails
             setSearchText('');
         }
     };
