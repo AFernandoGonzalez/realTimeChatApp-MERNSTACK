@@ -35,7 +35,7 @@ const Chat = () => {
   // console.log("conversation CHAT: ", conversation.find((conversationItem) => conversationItem.mock));
 
   // console.log("selectedConversation ", selectedConversation);
-  // console.log("selectedCurrentConversation CHAT: ", selectedCurrentConversation);
+  console.log("selectedCurrentConversation CHAT: ", selectedCurrentConversation);
 
   return (
     <div className='container m-4'>

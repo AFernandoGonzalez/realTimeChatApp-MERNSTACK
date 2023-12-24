@@ -59,55 +59,27 @@ export const ChatProvider = ({ children }) => {
         };
 
         const fetchCurrentMessages = async () => {
-            // if (conversation.find((conversationItem) => conversationItem.mock)) {
-            //     const foundConversation = conversation.find((conversationItem) => conversationItem.mock);
-            //     // console.log("foundConversation --- ", foundConversation);
-            //     setSelectedConversation(foundConversation.participants[0]._id);
-            //     return;
-            // }
-
-
-            // here we are tyin to get the mock converarion id and not fetch the database for it we can simple pass the mock conversation id to the fetchCurrentMessagesService and display that data, we are checking if the conversation is a mock conversation and if it is we are setting the selectedConversation to the mock conversation id and then passing that to the fetchCurrentMessagesService and then displaying that data
-
-            //display the conversation to see if there are any mock conversations
-            // console.log("fetchCurrentMessages conversation ", conversation);
-
-            // // this is the specific conversation when we click on the conversation
-            // console.log("fetchCurrentMessages selectedCurrentConversation ", selectedCurrentConversation);
-
-            // Find and iterate over conversations
-            // conversation.forEach(conversation => {
-            //     // Check if the conversation is a mock conversation
-            //     if (conversation.mock) {
-            //         // If it is a mock conversation, set the selectedConversation to the mock conversation id
-            //         const selectedConversationId = conversation._id;
-
-            //         // Pass the selectedConversationId to the fetchCurrentMessagesService
-            //         fetchCurrentMessagesService(selectedConversationId);
-
-            //         // Display the data of the mock conversation
-            //         console.log("Mock Conversation Data:", conversation);
-            //     }
-            // });
-
             const mockConversation = conversation.find((conversationItem) => conversationItem.mock);
 
-            if(mockConversation) {
-                // const selectedConversationId = mockConversation._id;
-                // console.log("selectedConversationId ", selectedConversationId);
-
+            if (mockConversation) {
                 // Display the data of the mock conversation
                 console.log("Mock Conversation Data:", mockConversation);
-
-                // Set the selectedConversation and exit the function
-                setSelectedCurrentConversation(mockConversation);
-  
+        
+                // Set the selectedConversation with the mock conversation
+                setSelectedCurrentConversation({
+                    ...mockConversation,
+                    messages: [] // Ensure there's a messages array
+                });
+                
+                setSelectedConversation(mockConversation);
+                console.log("selectedConversation after mock: ", selectedConversation);
+                setIsLoading(false); // Update isLoading flag
                 return;
             }
 
             // Continue with fetching from the database
-            console.log("fetchCurrentMessages conversation ", conversation);
-            console.log("fetchCurrentMessages selectedCurrentConversation ", selectedCurrentConversation);
+            // console.log("fetchCurrentMessages conversation ", conversation);
+            // console.log("fetchCurrentMessages selectedCurrentConversation ", selectedCurrentConversation);
 
 
             try {
@@ -124,6 +96,7 @@ export const ChatProvider = ({ children }) => {
 
         fetchConversation();
         fetchCurrentMessages();
+
 
         setSocket(newSocket);
         return () => {
@@ -188,7 +161,7 @@ export const ChatProvider = ({ children }) => {
         try {
             const searchedUser = await fetchSearchUsersByTextService(searchText, currentUser?.token);
 
-            console.log("searchedUser ", searchedUser);
+            console.log("1. searchedUser ", searchedUser);
 
             if (searchedUser[0]._id === currentUser.userId) {
                 // console.log("You cannot add yourself");
@@ -199,7 +172,7 @@ export const ChatProvider = ({ children }) => {
             // Check if a conversation with the searched user exists
             const existingConversation = conversation.find((c) => c.participants[0]._id === searchedUser[0]._id);
 
-            console.log("existingConversation after searched User: ", existingConversation);
+            console.log("2. Found Existing Convo: ", existingConversation);
 
             if (existingConversation) {
                 setSelectedConversation(existingConversation.participants[0]._id);
@@ -223,11 +196,14 @@ export const ChatProvider = ({ children }) => {
                 };
 
                 // Add the mock conversation to the conversation state
-                setConversation((prevConversation) => [...prevConversation, mockConversation]);
-
-                console.log("mockConversation ", conversation);
+                setConversation((prevConversation) => [...prevConversation, mockConversation]); 
+            
+                // setSelectedConversation(mockConversation.participants[0]._id);
+                console.log("3. Mock Conversation: ", mockConversation.participants[0]._id);
             }
 
+
+            console.log("selectedConversation after searched User: ", selectedConversation);
 
             setContactFound(searchedUser);
 
