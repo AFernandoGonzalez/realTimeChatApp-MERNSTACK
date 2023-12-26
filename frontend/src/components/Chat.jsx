@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react'
+import { useEffect, useState, useRef } from 'react'
 import { useChat } from '../context/ChatContext';
 
 const Chat = () => {
@@ -16,6 +16,7 @@ const Chat = () => {
     selectedCurrentConversation, setSelectedCurrentConversation,
     searchText, setSearchText,
     contactFound, setContactFound,
+    onlineUsers, setOnlineUsers,
     changeMessageHandler,
     sendMessage,
     handleConversationClick,
@@ -23,17 +24,18 @@ const Chat = () => {
     searchForContact
   } = useChat();
 
+  const messageScrollDown = useRef(null);
 
   useEffect(() => {
-    // listen for events from the server
-    // socket
+    socket
+  }, [socket]);
 
-  }, []);
-
-
-
-  // console.log("Chat: ", conversation);
-  // console.log("selectedConversation: ", selectedConversation);
+  useEffect(() => {
+    // Scroll to the last message when the component updates or new message is received
+    if (messageScrollDown.current) {
+      messageScrollDown.current.scrollIntoView({ behavior: 'smooth' });
+    }
+  }, [selectedCurrentConversation?.messages]);
 
   return (
     <div className='container m-4'>
@@ -60,34 +62,41 @@ const Chat = () => {
                   <span className="visually-hidden">Loading...</span>
                 </div>
               ) : (
-                  <div className="list-group">
-                    {conversation?.map((conversationItem, index) => {
-                      return (
-                        <div key={index}>
-                          {conversationItem.participants.map((participant, participantIndex) => (
-                            <div
-                              className={`list-group-item d-flex align-items-center ${selectedConversation === participant._id ? 'bg-primary-subtle' : ''}`}
-                              key={participantIndex}
-                              onClick={() => handleConversationClick(participant._id || selectedConversation)}
-                            >
-                              <img className="rounded-circle" style={{ width: "30px", height: "30px" }} src={participant.profilePicture} alt=""></img>
-                              <div className="ms-2">
-                                <a href="" className="list-group-item-action">{participant.username}</a>
-                                {conversationItem.lastMessage && (
-                                  <div>
-                                    {currentUser.userId !== conversationItem.lastMessage.sender ? "You" : "---"}
-                                    <p className="alert alert-primary m-0" style={{ fontSize: "12px" }}>
-                                      Last message: {conversationItem.lastMessage.text}
-                                    </p>
-                                  </div>
-                                )}
-                              </div>
+                <div className="list-group">
+                  {conversation?.map((conversationItem, index) => {
+                    return (
+                      <div key={index}>
+                        {conversationItem.participants.map((participant, participantIndex) => (
+                          <div
+                            className={`list-group-item d-flex align-items-center ${selectedConversation === participant._id ? 'bg-primary-subtle' : ''}`}
+                            key={participantIndex}
+                            onClick={() => handleConversationClick(participant._id || selectedConversation)}
+                          >
+                            {onlineUsers.includes(participant._id) ? (
+                              <span className="badge bg-primary rounded-circle me-2">Online</span>
+                            ) : (
+                              <span className="badge bg-secondary rounded-circle me-2">Offline</span>
+
+                            )}
+
+                            <img className="rounded-circle" style={{ width: "30px", height: "30px" }} src={participant.profilePicture} alt=""></img>
+                            <div className="ms-2">
+                              <a href="" className="list-group-item-action">{participant.username}</a>
+                              {conversationItem.lastMessage && (
+                                <div>
+                                  {currentUser.userId !== conversationItem.lastMessage.sender ? "You" : "---"}
+                                  <p className="alert alert-primary m-0" style={{ fontSize: "12px" }}>
+                                    Last message: {conversationItem.lastMessage.text}
+                                  </p>
+                                </div>
+                              )}
                             </div>
-                          ))}
-                        </div>
-                      );
-                    })}
-                  </div>
+                          </div>
+                        ))}
+                      </div>
+                    );
+                  })}
+                </div>
 
               )}
             </ul>
@@ -108,7 +117,10 @@ const Chat = () => {
 
                       {selectedConversation.length > 0 ? (
                         selectedCurrentConversation?.messages?.map((message, index) => (
-                          <li className='list-group-item mb-2' key={index}>
+                          <li className='list-group-item mb-2' key={index}
+                            direction={message.sender._id === currentUser.userId ? 'right' : 'left'}
+                            ref={index === selectedCurrentConversation.messages.length - 1 ? messageScrollDown : null}
+                          >
                             {message.sender._id === currentUser.userId ? (
                               <p className='alert alert-primary text-end'>You: {message.text}</p>
                             ) : (
@@ -125,7 +137,7 @@ const Chat = () => {
                           )}
                         </li>
                       )}
-
+                      <div ref={messageScrollDown} />
                     </ul>
                   </div>
 

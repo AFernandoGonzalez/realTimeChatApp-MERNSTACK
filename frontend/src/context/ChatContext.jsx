@@ -1,5 +1,5 @@
 // ChatContext.js
-import { createContext, useContext, useState, useEffect } from 'react';
+import { createContext, useContext, useState, useEffect, useRef } from 'react';
 import { toast } from 'react-toastify';
 import { io } from 'socket.io-client';
 import { API_BASE_URL } from '../constants';
@@ -17,7 +17,7 @@ export const ChatProvider = ({ children }) => {
     const [socket, setSocket] = useState(null);
     const { currentUser } = useAuth(null);
     const [message, setMessage] = useState([]);
-    const [output, setOutput] = useState([]);
+    // const [output, setOutput] = useState([]);
     const [feedback, setFeedback] = useState('');
     const [userList, setUserList] = useState([]);
     const [isLoading, setIsLoading] = useState(true);
@@ -27,35 +27,83 @@ export const ChatProvider = ({ children }) => {
     const [searchText, setSearchText] = useState('');
     const [contactFound, setContactFound] = useState([]);
 
+    const [onlineUsers, setOnlineUsers] = useState([]);
+
+    // const messageScrollDown = useRef(null);
+
 
     useEffect(() => {
 
         const newSocket = io(API_BASE_URL, {
             auth: {
-                token: currentUser?.token,
+                userId: currentUser?.userId,
             },
         });
 
         setSocket(newSocket);
 
+        newSocket.on("connect", () => {
+            // Socket connection is established
+            setSocket(newSocket);
+
+            newSocket.on("getOnlineUsers", (users) => {
+                setOnlineUsers(users);
+            });
+
+            newSocket.on("newMessage", (message) => {
+                console.log("newMessage: ", message);
+                sendMessage((prevMessage) => [...prevMessage, message]);
+
+                setConversation((prevConversation) => {
+                    const existingConversation = prevConversation.find((c) => c._id === message.conversationId);
+                    if (existingConversation) {
+                        return prevConversation.map((c) => {
+                            if (c._id === message.conversationId) {
+                                return {
+                                    ...c,
+                                    lastMessage: message,
+                                };
+                            }
+                            return c;
+                        });
+                    } else {
+                        return [
+                            {
+                                _id: message.conversationId,
+                                lastMessage: message,
+                                participants: [
+                                    {
+                                        _id: message.sender,
+                                    },
+                                ],
+                            },
+                            ...prevConversation,
+                        ];
+                    }
+                });
+            });
+
+        });
+
         const fetchConversation = async () => {
 
             const selectedConversationMock = conversation.find((c) => c.mock === true)
-            if (selectedConversationMock) { 
+            if (selectedConversationMock) {
                 setSelectedConversation(selectedConversationMock.participants[0]._id);
                 return;
-            }else{
+            } else {
 
-            
 
-            try {
-                const data = await fetchConversationService(currentUser?.token);
-                setConversation(data);
-                setIsLoading(false);
-            } catch (error) {
-                toast.error(`Failed to fetch conversations in ChatContext. Status: ${error.message}`);
-                throw error;
-            }}
+
+                try {
+                    const data = await fetchConversationService(currentUser?.token);
+                    setConversation(data);
+                    setIsLoading(false);
+                } catch (error) {
+                    toast.error(`Failed to fetch conversations in ChatContext. Status: ${error.message}`);
+                    throw error;
+                }
+            }
         };
 
         const fetchCurrentMessages = async () => {
@@ -80,18 +128,20 @@ export const ChatProvider = ({ children }) => {
         fetchConversation();
         fetchCurrentMessages();
 
-        return () => newSocket.close();
+        return () => {
+            newSocket.off("getOnlineUsers");
+            newSocket.off("newMessage");
+        }
 
-    }, [selectedConversation, conversation.length, currentUser?.token]);
+    }, [selectedConversation, conversation.length, currentUser?.userId]);
 
 
-    
     const changeMessageHandler = async (e) => {
         setMessage(e.target.value);
     };
 
-    const sendMessage = async (e) => {
-        e.preventDefault();
+    const sendMessage = async () => {
+
         try {
             try {
                 const data = await sendMessageService(message, selectedConversation, currentUser?.token);
@@ -155,7 +205,7 @@ export const ChatProvider = ({ children }) => {
                 setSelectedConversation(searchedUser[0]._id);
                 return;
             }
-            else{
+            else {
                 const mockConversation = {
                     mock: true,
                     lastMessage: {
@@ -171,11 +221,11 @@ export const ChatProvider = ({ children }) => {
                         },
                     ],
                 };
-                
+
                 setConversation((prevConversation) => [...prevConversation, mockConversation]);
                 // setSelectedConversation(searchedUser[0]._id);
             }
-            
+
 
         } catch (error) {
             toast.error(<div>Contact <strong>{searchText}</strong> not found.</div>);
@@ -190,7 +240,7 @@ export const ChatProvider = ({ children }) => {
         socket,
         currentUser,
         message,
-        output,
+        // output,
         feedback,
         userList,
         isLoading,
@@ -199,6 +249,7 @@ export const ChatProvider = ({ children }) => {
         selectedCurrentConversation,
         searchText,
         contactFound,
+        onlineUsers,
         changeMessageHandler,
         sendMessage,
         handleConversationClick,
