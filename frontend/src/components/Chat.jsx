@@ -30,14 +30,9 @@ const Chat = () => {
 
   }, []);
 
-  
 
-  // console.log("conversation CHAT: ", conversation.find((conversationItem) => conversationItem.mock));
 
-  // console.log("selectedConversation ", selectedConversation);
-  console.log("selectedCurrentConversation CHAT: ", selectedCurrentConversation);
-  console.log("selectedConversation CHAT: ", selectedConversation);
-
+  console.log("Chat: ", conversation);
   return (
     <div className='container m-4'>
       <div className='row'>
@@ -147,7 +142,7 @@ const Chat = () => {
                     <span className="">Select a conversation </span>
                   </ul>
                   <div className="fst-italic text-secondary" role="alert">
-                    
+
 
                   </div>
                 </div>

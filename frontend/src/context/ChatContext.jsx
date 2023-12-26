@@ -28,6 +28,12 @@ export const ChatProvider = ({ children }) => {
     const [contactFound, setContactFound] = useState([]);
 
     useEffect(() => {
+        console.log("Updated Conversation:", conversation);
+        console.log("Updated Selected Conversation:", selectedConversation);
+    }, [conversation, selectedConversation]);
+    
+
+    useEffect(() => {
         const newSocket = io(API_BASE_URL);
 
         newSocket.on('messageResponse', (data) => {
@@ -63,24 +69,19 @@ export const ChatProvider = ({ children }) => {
 
             if (mockConversation) {
                 // Display the data of the mock conversation
-                console.log("Mock Conversation Data:", mockConversation);
-        
+                // console.log("Mock Conversation Data:", mockConversation);
+
                 // Set the selectedConversation with the mock conversation
                 setSelectedCurrentConversation({
                     ...mockConversation,
                     messages: [] // Ensure there's a messages array
                 });
-                
+
                 setSelectedConversation(mockConversation);
-                console.log("selectedConversation after mock: ", selectedConversation);
+                // console.log("selectedConversation after mock: ", selectedConversation);
                 setIsLoading(false); // Update isLoading flag
                 return;
             }
-
-            // Continue with fetching from the database
-            // console.log("fetchCurrentMessages conversation ", conversation);
-            // console.log("fetchCurrentMessages selectedCurrentConversation ", selectedCurrentConversation);
-
 
             try {
                 const data = await fetchCurrentMessagesService(selectedConversation, currentUser?.token);
@@ -158,13 +159,13 @@ export const ChatProvider = ({ children }) => {
         if (!searchText || searchText.trim() === '') {
             return;
         }
+
         try {
             const searchedUser = await fetchSearchUsersByTextService(searchText, currentUser?.token);
 
             console.log("1. searchedUser ", searchedUser);
 
             if (searchedUser[0]._id === currentUser.userId) {
-                // console.log("You cannot add yourself");
                 toast.error(<div>You cannot chat with yourself</div>);
                 return;
             }
@@ -196,21 +197,18 @@ export const ChatProvider = ({ children }) => {
                 };
 
                 // Add the mock conversation to the conversation state
-                setConversation((prevConversation) => [...prevConversation, mockConversation]); 
-            
-                // setSelectedConversation(mockConversation.participants[0]._id);
-                console.log("3. Mock Conversation: ", mockConversation.participants[0]._id);
+                setConversation((prevConversation) => [...prevConversation, mockConversation]);
+
+                // Update selectedConversation to the new mock conversation
+                setSelectedConversation(mockConversation.participants[0]._id);
+
+                console.log("3. Mock Conversation: ", conversation);
+                console.log("4. Mock Conversation selectedConversation: ", selectedConversation);
             }
-
-
-            console.log("selectedConversation after searched User: ", selectedConversation);
 
             setContactFound(searchedUser);
 
-
         } catch (error) {
-            // console.error(`Failed to search for contact in ChatContext. Status: ${error.message}`);
-            // toast.error(<div>Failed to search for contact <strong>{searchText}</strong>. {error.message}</div>);
             toast.error(<div>Contact <strong>{searchText}</strong> not found.</div>);
             throw error;
         } finally {
@@ -218,6 +216,7 @@ export const ChatProvider = ({ children }) => {
             setSearchText('');
         }
     };
+
 
     const value = {
         socket,
