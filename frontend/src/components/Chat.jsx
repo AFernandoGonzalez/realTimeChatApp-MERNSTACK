@@ -26,13 +26,15 @@ const Chat = () => {
 
   useEffect(() => {
     // listen for events from the server
-    socket
+    // socket
 
   }, []);
 
 
 
-  console.log("Chat: ", conversation);
+  // console.log("Chat: ", conversation);
+  // console.log("selectedConversation: ", selectedConversation);
+
   return (
     <div className='container m-4'>
       <div className='row'>
@@ -58,33 +60,34 @@ const Chat = () => {
                   <span className="visually-hidden">Loading...</span>
                 </div>
               ) : (
-                <div className="list-group">
-                  {conversation?.map((conversationItem, index) => (
-                    <div key={index}>
-                      {conversationItem.participants.map((participant, participantIndex) => (
-                        <div
-                          className={`list-group-item d-flex align-items-center ${selectedConversation === participant._id ? 'bg-primary-subtle' : ''}`}
-                          key={participantIndex}
-                          onClick={() => handleConversationClick(participant._id || selectedConversation)}
-                        >
-                          <img className="rounded-circle" style={{ width: "30px", height: "30px" }} src={participant.profilePicture} alt=""></img>
-                          <div className="ms-2">
-                            <a href="" className="list-group-item-action">{participant.username}</a>
-                            {conversationItem.lastMessage && (
-                              <div>
-                                {currentUser.userId !== conversationItem.lastMessage.sender ? "You" : "---"}
-                                <p className="alert alert-primary m-0" style={{ fontSize: "12px" }}>
-                                  Last message: {conversationItem.lastMessage.text}
-                                </p>
+                  <div className="list-group">
+                    {conversation?.map((conversationItem, index) => {
+                      return (
+                        <div key={index}>
+                          {conversationItem.participants.map((participant, participantIndex) => (
+                            <div
+                              className={`list-group-item d-flex align-items-center ${selectedConversation === participant._id ? 'bg-primary-subtle' : ''}`}
+                              key={participantIndex}
+                              onClick={() => handleConversationClick(participant._id || selectedConversation)}
+                            >
+                              <img className="rounded-circle" style={{ width: "30px", height: "30px" }} src={participant.profilePicture} alt=""></img>
+                              <div className="ms-2">
+                                <a href="" className="list-group-item-action">{participant.username}</a>
+                                {conversationItem.lastMessage && (
+                                  <div>
+                                    {currentUser.userId !== conversationItem.lastMessage.sender ? "You" : "---"}
+                                    <p className="alert alert-primary m-0" style={{ fontSize: "12px" }}>
+                                      Last message: {conversationItem.lastMessage.text}
+                                    </p>
+                                  </div>
+                                )}
                               </div>
-                            )}
-
-                          </div>
+                            </div>
+                          ))}
                         </div>
-                      ))}
-                    </div>
-                  ))}
-                </div>
+                      );
+                    })}
+                  </div>
 
               )}
             </ul>
@@ -102,7 +105,18 @@ const Chat = () => {
                   </ul>
                   <div className="overflow-auto" style={{ maxHeight: '50vh' }}>
                     <ul className="list-group">
-                      {selectedCurrentConversation.messages.map((message, index) => (
+
+                      {selectedConversation.length > 0 ? (
+                        selectedCurrentConversation?.messages?.map((message, index) => (
+                          <li className='list-group-item mb-2' key={index}>
+                            {message.sender._id === currentUser.userId ? (
+                              <p className='alert alert-primary text-end'>You: {message.text}</p>
+                            ) : (
+                              <p className='alert alert-secondary text-start'>{message.sender.username}: {message.text}</p>
+                            )}
+                          </li>
+                        ))
+                      ) : (
                         <li className='list-group-item mb-2' key={index}>
                           {message.sender._id === currentUser.userId ? (
                             <p className='alert alert-primary text-end'>You: {message.text}</p>
@@ -110,7 +124,8 @@ const Chat = () => {
                             <p className='alert alert-secondary text-start'>{message.sender.username}: {message.text}</p>
                           )}
                         </li>
-                      ))}
+                      )}
+
                     </ul>
                   </div>
 
