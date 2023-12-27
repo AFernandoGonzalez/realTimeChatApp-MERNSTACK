@@ -1,13 +1,16 @@
 /* Add this CSS to your stylesheets or in a style tag in your component */
 
-.list-group-item {
+.list-group-item-custom {
     cursor: pointer;
     transition: background-color 0.3s ease;
+    margin-bottom: 10px;
 }
 
-.list-group-item:hover {
+.list-group-item-custom:hover {
     background-color: #f0f0f0; /* Adjust the hover background color as needed */
 }
+
+
 
 .avatar-container {
     position: relative;
@@ -32,7 +35,7 @@
 }
 
 .status-indicator.offline {
-    background-color: #e83e38; /* Offline status color */
+    background-color: #a3a3a3; /* Offline status color */
 }
 
 .ms-3 {

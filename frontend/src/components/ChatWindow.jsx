@@ -1,25 +1,36 @@
 // ChatWindow.jsx
-import React, { useEffect, useRef } from 'react';
+import React from 'react';
 import MessageItem from './MessageItem';
+import './ChatWindow.css';
 
 const ChatWindow = ({
     selectedCurrentConversation,
-    messageScrollDown,
-    sendMessage,
     currentUser,
+    message,
     changeMessageHandler,
+    sendMessage,
+    messageScrollDown,
 }) => {
+
+    
     return (
-        <div id="chat-window">
+        <div id="chat-window" className="">
+            <div id='chat-content'></div>
+
             {selectedCurrentConversation ? (
-                <div className="card">
-                    <div className="card-body" style={{ minHeight: "50vh", maxHeight: "60vh" }}>
-                        <h5 className="card-title">Chat</h5>
-                        <ul className="list-group">
-                            <span className="">User Name </span>
-                        </ul>
-                        <div className="overflow-auto" style={{ maxHeight: '50vh' }}>
-                            <ul className="list-group">
+                <div className="chat-user-section">
+
+                    <div className='chat-user-info'>
+                        <div className="">
+                            <span className="text-info">{selectedCurrentConversation.otherUser || "Get user name"}</span>
+                        </div>
+
+                    </div>
+
+                    <div className="chat-user-messages">
+
+                        <div className="chat-content">
+                            <ul className="list-group chat-messages-list">
                                 {/* Render messages */}
                                 {selectedCurrentConversation?.messages?.map((message, index) => (
                                     <MessageItem
@@ -33,34 +44,34 @@ const ChatWindow = ({
                                 <div ref={messageScrollDown} />
                             </ul>
                         </div>
-                        <div className="fst-italic text-secondary" role="alert"></div>
-                    </div>
-                    <div>
-                        <div className="input-group mb-3">
-                            <input
-                                type="text"
-                                className="form-control"
-                                placeholder="Message"
-                                aria-label="Message"
-                                value={currentUser.message}
-                                onChange={changeMessageHandler}
-                            />
-                            <button className="btn btn-primary" onClick={sendMessage}>Send</button>
+
+                        <div>
+                            <div className="input-group mb-3">
+                                <input
+                                    type="text"
+                                    className="form-control"
+                                    placeholder="Message"
+                                    aria-label="Message"
+                                    value={message}
+                                    onChange={changeMessageHandler}
+                                />
+                                <button className="btn btn-primary" onClick={sendMessage}>Send</button>
+                            </div>
                         </div>
+
                     </div>
+
                 </div>
             ) : (
-                <div className="card">
-                    <div className="card-body" style={{ minHeight: "50vh", maxHeight: "60vh" }}>
-                        <h5 className="card-title">Chat</h5>
-                        <ul className="list-group">
-                            <span className="">Select a conversation </span>
-                        </ul>
-                        <div className="fst-italic text-secondary" role="alert"></div>
+                <div className="chat-welcome-section">
+                    <div className="card-container">
+                        <h4>Welcome to ChatAppeando</h4>
+                        <p className="text-muted  text-center m-4">Experience the joy of connecting with others in a seamless and delightful environment. Our platform is designed with your comfort in mind, ensuring a smooth and enjoyable chatting experience.</p>
+                        <button type="button" className="btn btn-primary">Get Started</button>
                     </div>
-                </div>
+                </div >
             )}
-        </div>
+        </div >
     );
 };
 

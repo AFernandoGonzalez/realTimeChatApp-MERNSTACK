@@ -1,6 +1,7 @@
 // ConversationItem.jsx
 import React from 'react';
 import './ConverstionItem.css'
+
 const ConversationItem = ({
     conversation,
     selectedConversation,
@@ -12,7 +13,7 @@ const ConversationItem = ({
         <div>
             {conversation.participants.map((participant, participantIndex) => (
                 <div
-                    className={`list-group-item d-flex align-items-center ${selectedConversation === participant._id ? 'bg-primary-subtle' : ''}`}
+                    className={`list-group-item list-group-item-custom d-flex align-items-center ${selectedConversation === participant._id ? 'bg-success-subtle' : ''}`}
                     key={participantIndex}
                     onClick={() => handleConversationClick(participant._id || selectedConversation)}
                 >
