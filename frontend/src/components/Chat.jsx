@@ -1,5 +1,8 @@
 import { useEffect, useState, useRef } from 'react'
 import { useChat } from '../context/ChatContext';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
+import { faSearch } from '@fortawesome/free-solid-svg-icons';
+import './Chat.css'
 
 const Chat = () => {
 
@@ -38,10 +41,11 @@ const Chat = () => {
   }, [selectedCurrentConversation?.messages]);
 
   return (
-    <div className='container m-4'>
+    <div className='container mt-4'>
       <div className='row'>
-        <div className='col-4'>
-          <div className="input-group mb-3">
+        <div className='col-md-4 mb-3 mb-md-0'>
+          <h4 className="card-title mb-4">Messages</h4>
+          <div className="input-group mb-4 no-focus-outline">
             <input
               type="text"
               className="form-control"
@@ -50,7 +54,9 @@ const Chat = () => {
               value={searchText}
               onChange={changeSearchContactHandler}
             />
-            <button className="btn btn-primary" onClick={searchForContact}>Search</button>
+            <button className="btn custom-btn" onClick={searchForContact}>
+              <FontAwesomeIcon icon={faSearch} />
+            </button>
           </div>
           <div className="list-group">
             <a href="#" className="list-group-item list-group-item-action active" aria-current="true">
@@ -76,9 +82,7 @@ const Chat = () => {
                               <span className="badge bg-primary rounded-circle me-2">Online</span>
                             ) : (
                               <span className="badge bg-secondary rounded-circle me-2">Offline</span>
-
                             )}
-
                             <img className="rounded-circle" style={{ width: "30px", height: "30px" }} src={participant.profilePicture} alt=""></img>
                             <div className="ms-2">
                               <a href="" className="list-group-item-action">{participant.username}</a>
@@ -97,13 +101,12 @@ const Chat = () => {
                     );
                   })}
                 </div>
-
               )}
             </ul>
           </div>
         </div>
 
-        <div className='col'>
+        <div className='col-md-8'>
           <div id='chat-window'>
             {selectedCurrentConversation ? (
               <div className="card" >
@@ -111,10 +114,10 @@ const Chat = () => {
                   <h5 className="card-title">Chat</h5>
                   <ul className="list-group">
                     <span className="">User Name </span>
+                    {/* <span className="">{selectedCurrentConversation.participants.find(p => p._id === message.sender._id)?.username}</span> */}
                   </ul>
                   <div className="overflow-auto" style={{ maxHeight: '50vh' }}>
                     <ul className="list-group">
-
                       {selectedConversation.length > 0 ? (
                         selectedCurrentConversation?.messages?.map((message, index) => (
                           <li className='list-group-item mb-2' key={index}
@@ -140,12 +143,7 @@ const Chat = () => {
                       <div ref={messageScrollDown} />
                     </ul>
                   </div>
-
-
-
-                  <div className="fst-italic text-secondary" role="alert">
-
-                  </div>
+                  <div className="fst-italic text-secondary" role="alert"></div>
                 </div>
                 <div>
                   <div className="input-group mb-3">
@@ -157,7 +155,7 @@ const Chat = () => {
                       value={message}
                       onChange={changeMessageHandler}
                     />
-                    <button className="btn btn-primary" onClick={sendMessage} >Send</button>
+                    <button className="btn btn-primary" onClick={sendMessage}>Send</button>
                   </div>
                 </div>
               </div>
@@ -168,10 +166,7 @@ const Chat = () => {
                   <ul className="list-group">
                     <span className="">Select a conversation </span>
                   </ul>
-                  <div className="fst-italic text-secondary" role="alert">
-
-
-                  </div>
+                  <div className="fst-italic text-secondary" role="alert"></div>
                 </div>
               </div>
             )}
@@ -179,6 +174,7 @@ const Chat = () => {
         </div>
       </div>
     </div>
+
   )
 }
 

@@ -1,0 +1,25 @@
+:root{
+    --chat-searchbar-bg: #e3e3e3;
+}
+
+.no-focus-outline .form-control:focus {
+  box-shadow: none !important;
+  /* border-right: none !important; */
+  border-color: #ced4da !important;
+  /* background-color: rgb(255, 255, 255) !important; */
+}
+
+.no-focus-outline .form-control {
+  box-shadow: none !important;
+  border-right: none !important;
+  /* background-color: var(--chat-searchbar-bg); */
+}
+
+button.custom-btn:focus {
+  /* background-color: white !important; */
+}
+button.custom-btn {
+  border: 1px solid #ced4da !important;
+  border-left: none !important;
+  /* background-color: var(--chat-searchbar-bg) !important; */
+}
