@@ -5,7 +5,7 @@
   width: 100%;
 }
 
-#chat-content {
+.chat-content-bg {
   background-image: url('../assets/chatparttenbg.jpg');
   opacity: 0.1;
   position: absolute;
@@ -49,6 +49,7 @@
     flex-wrap: wrap;
     align-content: center;
     width: 100%;
+    max-width: 90%;
 }
 
 .chat-user-messages {
@@ -79,4 +80,36 @@
   /* height: calc(100vh - 100px); */
   width: 100%;
   /* overflow-y: auto; */
+}
+
+
+/* custom scroller */
+
+/* Customize the scrollbar */
+.chat-content::-webkit-scrollbar {
+  width: 10px; 
+}
+
+.chat-content::-webkit-scrollbar-thumb {
+  background-color: #989898; /* Color of the scrollbar thumb */
+  border-radius: 6px; /* Rounded corners of the scrollbar thumb */
+}
+
+.chat-content::-webkit-scrollbar-track {
+  background-color: #f0f0f0; /* Color of the scrollbar track */
+}
+
+/* Optional: Handle scrollbar on hover */
+.chat-content:hover::-webkit-scrollbar-thumb {
+  background-color: #398f54; /* Change color on hover */
+}
+
+/* Optional: Hide scrollbar when not hovered */
+.chat-content {
+  scrollbar-width: thin; /* Firefox */
+  scrollbar-color: transparent transparent; /* Firefox */
+}
+
+.chat-content:hover {
+  scrollbar-color: #4eac6d #f0f0f0; /* Firefox */
 }

@@ -2,6 +2,7 @@
 import React from 'react';
 import MessageItem from './MessageItem';
 import './ChatWindow.css';
+import { ChatInput } from './ChatInput';
 
 const ChatWindow = ({
     selectedCurrentConversation,
@@ -11,12 +12,9 @@ const ChatWindow = ({
     sendMessage,
     messageScrollDown,
 }) => {
-
-    
     return (
         <div id="chat-window" className="">
-            <div id='chat-content'></div>
-
+            {/* <div className='chat-content-bg'></div> */}
             {selectedCurrentConversation ? (
                 <div className="chat-user-section">
 
@@ -28,10 +26,8 @@ const ChatWindow = ({
                     </div>
 
                     <div className="chat-user-messages">
-
                         <div className="chat-content">
                             <ul className="list-group chat-messages-list">
-                                {/* Render messages */}
                                 {selectedCurrentConversation?.messages?.map((message, index) => (
                                     <MessageItem
                                         key={index}
@@ -44,23 +40,26 @@ const ChatWindow = ({
                                 <div ref={messageScrollDown} />
                             </ul>
                         </div>
-
-                        <div>
-                            <div className="input-group mb-3">
-                                <input
-                                    type="text"
-                                    className="form-control"
-                                    placeholder="Message"
-                                    aria-label="Message"
-                                    value={message}
-                                    onChange={changeMessageHandler}
-                                />
-                                <button className="btn btn-primary" onClick={sendMessage}>Send</button>
-                            </div>
-                        </div>
-
                     </div>
 
+                    {/* <div className='chat-input-section'>
+                        <div className="input-group mb-3">
+                            <input
+                                type="text"
+                                className="form-control"
+                                placeholder="Message"
+                                aria-label="Message"
+                                value={message}
+                                onChange={changeMessageHandler}
+                            />
+                            <button className="btn btn-primary" onClick={sendMessage}>Send</button>
+                        </div>
+                    </div> */}
+                    <ChatInput
+                        message={message}
+                        changeMessageHandler={changeMessageHandler}
+                        sendMessage={sendMessage}
+                    />
                 </div>
             ) : (
                 <div className="chat-welcome-section">

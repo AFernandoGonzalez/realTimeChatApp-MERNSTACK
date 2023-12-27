@@ -13,7 +13,7 @@ const ConversationItem = ({
         <div>
             {conversation.participants.map((participant, participantIndex) => (
                 <div
-                    className={`list-group-item list-group-item-custom d-flex align-items-center ${selectedConversation === participant._id ? 'bg-success-subtle' : ''}`}
+                    className={`list-group-item list-group-item-custom d-flex align-items-center ${selectedConversation === participant._id ? 'chat-list-active' : ''}`}
                     key={participantIndex}
                     onClick={() => handleConversationClick(participant._id || selectedConversation)}
                 >

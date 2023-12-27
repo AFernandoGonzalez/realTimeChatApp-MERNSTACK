@@ -19,7 +19,7 @@ export const getMessages = async (req, res) => {
             conversationId: conversation._id,
         })
             .sort({ createdAt: 1 })
-            .populate('sender', 'username');
+            .populate('sender', 'username profilePicture');
 
         res.status(200).json({ messages });
     } catch (error) {

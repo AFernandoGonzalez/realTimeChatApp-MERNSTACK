@@ -43,10 +43,10 @@ button.custom-btn {
 }
 
 .user-right-chat {
-  background-color: #f8f9fa;
-  border-right: 1px solid #e3e3e3;
+  /* background-color: #f8f9fa; */
+  /* border-right: 1px solid #e3e3e3; */
   height: 100%;
-  overflow-y: auto;
+  /* overflow-y: auto; */
   position: relative;
   width: 100%;
 }

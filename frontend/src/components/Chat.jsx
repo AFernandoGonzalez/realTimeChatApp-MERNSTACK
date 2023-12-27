@@ -45,7 +45,7 @@ const Chat = () => {
     <div className=''>
       <div className='layout-wrapper '>
 
-        <div className='chat-left-sidebar mt-4'>
+        <div className='chat-left-sidebar m-4'>
           <h4 className="card-title mb-4">Messages</h4>
           <Search
             searchText={searchText}
