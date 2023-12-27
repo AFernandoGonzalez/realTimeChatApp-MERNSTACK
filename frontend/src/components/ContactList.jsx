@@ -1,6 +1,3 @@
-// frontend/src/components/ContactList.js
-import React from 'react';
-
 export const ContactList = ({ contacts, handleStartChat }) => (
     <div>
         <ul>

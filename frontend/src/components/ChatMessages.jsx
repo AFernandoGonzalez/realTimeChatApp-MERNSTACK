@@ -1,5 +1,3 @@
-// frontend/src/components/ChatMessages.js
-import React from 'react';
 
 export const ChatMessages = ({ receivedMessages }) => (
     <ul className="list-group">

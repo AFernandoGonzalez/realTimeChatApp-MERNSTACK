@@ -1,11 +1,6 @@
-// LoginForm.js
-import React, { useState, useEffect } from 'react';
 import { useAuth } from '../context/AuthContext';
 import { useNavigate } from 'react-router-dom';
-
-import { io } from 'socket.io-client';
-import { API_BASE_URL } from '../constants';
-// import { useProfile } from '../context/ProfileContext';
+import { useState } from 'react';
 
 export const LoginForm = () => {
     const [email, setEmail] = useState('');
@@ -13,30 +8,10 @@ export const LoginForm = () => {
     const { login } = useAuth();
     const navigate = useNavigate();
 
-    // const [socket, setSocket] = useState(null);
-    // const { userProfile } = useProfile(null);
-    // const [username, setUsername] = useState(userProfile?.username);
-
-    // useEffect(() => {
-    //     const newSocket = io(API_BASE_URL);
-
-    //     socket.on("userjoinedresponse", (msg) => {
-    //         console.log("user joined message", msg);
-    //     });
-
-    //     setSocket(newSocket);
-
-    //     return () => {
-    //         newSocket.disconnect();
-    //     };
-    // }, []);
-
-
     const handleSubmit = async (e) => {
         e.preventDefault();
         try {
             await login(email, password);
-            // socket.emit('loginUser', { username: username });
             navigate('/chatroom');
             console.log('Login successful');
         } catch (err) {

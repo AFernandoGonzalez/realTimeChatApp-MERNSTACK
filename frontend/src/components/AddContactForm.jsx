@@ -1,6 +1,3 @@
-// frontend/src/components/AddContactForm.js
-import React from 'react';
-
 export const AddContactForm = ({ newContactId, setNewContactId, handleAddContact }) => (
     <div className="mt-4">
         <h3>Add Contact</h3>

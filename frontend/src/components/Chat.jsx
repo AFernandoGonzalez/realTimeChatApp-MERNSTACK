@@ -3,6 +3,9 @@ import { useChat } from '../context/ChatContext';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faSearch } from '@fortawesome/free-solid-svg-icons';
 import './Chat.css'
+import ChatList from './ChatList';
+import ChatWindow from './ChatWindow';
+
 
 const Chat = () => {
 
@@ -34,7 +37,6 @@ const Chat = () => {
   }, [socket]);
 
   useEffect(() => {
-    // Scroll to the last message when the component updates or new message is received
     if (messageScrollDown.current) {
       messageScrollDown.current.scrollIntoView({ behavior: 'smooth' });
     }
@@ -58,7 +60,7 @@ const Chat = () => {
               <FontAwesomeIcon icon={faSearch} />
             </button>
           </div>
-          <div className="list-group">
+          {/* <div className="list-group">
             <a href="#" className="list-group-item list-group-item-action active" aria-current="true">
               Conversations
             </a>
@@ -103,18 +105,24 @@ const Chat = () => {
                 </div>
               )}
             </ul>
-          </div>
+          </div> */}
+          <ChatList
+            conversations={conversation}
+            selectedConversation={selectedConversation}
+            handleConversationClick={handleConversationClick}
+            onlineUsers={onlineUsers}
+            currentUser={currentUser}
+          />
         </div>
 
         <div className='col-md-8'>
-          <div id='chat-window'>
+          {/* <div id='chat-window'>
             {selectedCurrentConversation ? (
               <div className="card" >
                 <div className="card-body " style={{ minHeight: "50vh", maxHeight: "60vh" }}>
                   <h5 className="card-title">Chat</h5>
                   <ul className="list-group">
                     <span className="">User Name </span>
-                    {/* <span className="">{selectedCurrentConversation.participants.find(p => p._id === message.sender._id)?.username}</span> */}
                   </ul>
                   <div className="overflow-auto" style={{ maxHeight: '50vh' }}>
                     <ul className="list-group">
@@ -170,10 +178,58 @@ const Chat = () => {
                 </div>
               </div>
             )}
-          </div>
+          </div> */}
+          <ChatWindow
+            selectedCurrentConversation={selectedCurrentConversation}
+            conversation={conversation}
+            currentUser={currentUser}
+            messageScrollDown={messageScrollDown}
+            sendMessage={sendMessage}
+            changeMessageHandler={changeMessageHandler}
+          />
         </div>
       </div>
     </div>
+
+    // <div className="container mt-4">
+    //   <div className="row">
+    //     <div className="col-md-4 mb-3 mb-md-0">
+    //       <h4 className="card-title mb-4">Messages</h4>
+    //       <div className="input-group mb-4 no-focus-outline">
+    //         <input
+    //           type="text"
+    //           className="form-control"
+    //           placeholder="Search Contact"
+    //           aria-label="Search Contact"
+    //           value={currentUser.searchText}
+    //           onChange={changeSearchContactHandler}
+    //         />
+    //         <button className="btn custom-btn" onClick={searchForContact}>
+    //           <FontAwesomeIcon icon={faSearch} />
+    //         </button>
+    //       </div>
+    //       {/* Use the ChatList component */}
+    //       <ChatList
+    //         conversations={conversation}
+    //         selectedConversation={selectedConversation}
+    //         handleConversationClick={handleConversationClick}
+    //         onlineUsers={onlineUsers}
+    //         currentUser={currentUser}
+    //       />
+    //     </div>
+
+    //     <div className="col-md-8">
+    //       {/* Use the ChatWindow component */}
+    //       <ChatWindow
+    //         selectedCurrentConversation={selectedConversation}
+    //         messageScrollDown={messageScrollDown}
+    //         sendMessage={sendMessage}
+    //         currentUser={currentUser}
+    //         changeMessageHandler={changeMessageHandler}
+    //       />
+    //     </div>
+    //   </div>
+    // </div>
 
   )
 }

@@ -1,0 +1,51 @@
+/* Add this CSS to your stylesheets or in a style tag in your component */
+
+.list-group-item {
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+.list-group-item:hover {
+    background-color: #f0f0f0; /* Adjust the hover background color as needed */
+}
+
+.avatar-container {
+    position: relative;
+}
+
+.avatar {
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    margin-right: 15px;
+}
+
+.status-indicator {
+    position: absolute;
+    bottom: 2px;
+    right: 10px;
+    width: 20px;
+    height: 20px;
+    border-radius: 50%;
+    border: 2px solid #fff;
+    background-color: #299729; /* Online status color */
+}
+
+.status-indicator.offline {
+    background-color: #e83e38; /* Offline status color */
+}
+
+.ms-3 {
+    flex-grow: 1;
+}
+
+.last-message-text {
+    font-size: 12px;
+    margin-top: 5px;
+    color: #777;
+}
+
+.participant-name {
+    text-transform: capitalize;
+}
+

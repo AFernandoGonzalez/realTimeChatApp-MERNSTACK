@@ -17,23 +17,15 @@ export const ChatProvider = ({ children }) => {
     const [socket, setSocket] = useState(null);
     const { currentUser } = useAuth(null);
     const [message, setMessage] = useState([]);
-    // const [output, setOutput] = useState([]);
-    const [feedback, setFeedback] = useState('');
-    const [userList, setUserList] = useState([]);
     const [isLoading, setIsLoading] = useState(true);
     const [conversation, setConversation] = useState([]);
     const [selectedConversation, setSelectedConversation] = useState(null);
     const [selectedCurrentConversation, setSelectedCurrentConversation] = useState(null);
     const [searchText, setSearchText] = useState('');
     const [contactFound, setContactFound] = useState([]);
-
     const [onlineUsers, setOnlineUsers] = useState([]);
 
-    // const messageScrollDown = useRef(null);
-
-
     useEffect(() => {
-
         const newSocket = io(API_BASE_URL, {
             auth: {
                 userId: currentUser?.userId,
@@ -43,7 +35,6 @@ export const ChatProvider = ({ children }) => {
         setSocket(newSocket);
 
         newSocket.on("connect", () => {
-            // Socket connection is established
             setSocket(newSocket);
 
             newSocket.on("getOnlineUsers", (users) => {
@@ -93,8 +84,6 @@ export const ChatProvider = ({ children }) => {
                 return;
             } else {
 
-
-
                 try {
                     const data = await fetchConversationService(currentUser?.token);
                     setConversation(data);
@@ -116,7 +105,6 @@ export const ChatProvider = ({ children }) => {
             try {
                 const data = await fetchCurrentMessagesService(selectedConversation, currentUser?.token);
                 setSelectedCurrentConversation(data);
-                // console.log("data: ", data);
                 setIsLoading(false);
             } catch (error) {
                 toast.error(`Failed to fetch messages in ChatContext. Status: ${error.message}`);
@@ -132,7 +120,6 @@ export const ChatProvider = ({ children }) => {
             newSocket.off("getOnlineUsers");
             newSocket.off("newMessage");
         }
-
     }, [selectedConversation, conversation.length, currentUser?.userId]);
 
 
@@ -198,7 +185,6 @@ export const ChatProvider = ({ children }) => {
                 return;
             }
 
-            // Check if a conversation with the searched user exists
             const existingConversation = conversation.find((c) => c.participants[0]._id === searchedUser[0]._id);
 
             if (existingConversation) {
@@ -223,7 +209,6 @@ export const ChatProvider = ({ children }) => {
                 };
 
                 setConversation((prevConversation) => [...prevConversation, mockConversation]);
-                // setSelectedConversation(searchedUser[0]._id);
             }
 
 
@@ -240,9 +225,6 @@ export const ChatProvider = ({ children }) => {
         socket,
         currentUser,
         message,
-        // output,
-        feedback,
-        userList,
         isLoading,
         conversation,
         selectedConversation,
