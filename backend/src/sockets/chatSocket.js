@@ -1,5 +1,7 @@
 import { Server } from 'socket.io';
 import User from '../models/User.js';
+import dotenv from 'dotenv';
+dotenv.config();
 
 const FRONTEND_URL = process.env.FRONTEND_MAIN_URL;
 
