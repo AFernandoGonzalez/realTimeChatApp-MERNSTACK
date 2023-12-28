@@ -15,7 +15,6 @@ export const chatSocket = (server) => {
             origin: FRONTEND_URL,
             methods: ['GET', 'POST'],
             credentials: true,
-            transports: ['websocket'],
             allowedHeaders: ['Content-Type', 'Authorization'],
         },
     });
