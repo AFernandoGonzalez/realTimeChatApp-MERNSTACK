@@ -25,22 +25,22 @@ app.use(cors());
 // };
 // app.options('*', cors(corsOptions));
 
-app.use((req, res, next) => {
-    // const allowedOrigins = [
-    //     'https://chatappeando.netlify.app',
-    //     'https://main--chatappeando.netlify.app'
-    // ];
-    // const origin = req.headers.origin;
+// app.use((req, res, next) => {
+//     // const allowedOrigins = [
+//     //     'https://chatappeando.netlify.app',
+//     //     'https://main--chatappeando.netlify.app'
+//     // ];
+//     // const origin = req.headers.origin;
 
-    // if (allowedOrigins.includes(origin)) {
-    //     res.setHeader('Access-Control-Allow-Origin', origin);
-    // }
+//     // if (allowedOrigins.includes(origin)) {
+//     //     res.setHeader('Access-Control-Allow-Origin', origin);
+//     // }
 
-    res.header('Access-Control-Allow-Origin', 'https://chatappeando.netlify.app', 'https://main--chatappeando.netlify.app');
-    res.header('Access-Control-Allow-Methods', 'GET,HEAD,PUT,PATCH,POST,DELETE');
-    res.header('Access-Control-Allow-Credentials', true);
-    next();
-});
+//     res.header('Access-Control-Allow-Origin', 'https://chatappeando.netlify.app', 'https://main--chatappeando.netlify.app');
+//     res.header('Access-Control-Allow-Methods', 'GET,HEAD,PUT,PATCH,POST,DELETE');
+//     res.header('Access-Control-Allow-Credentials', true);
+//     next();
+// });
 
 
 app.use(express.json());
