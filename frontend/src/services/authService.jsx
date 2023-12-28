@@ -10,7 +10,8 @@ const login = async (email, password) => {
         }, {
             headers: {
                 'Content-Type': 'application/json'
-            }
+            },
+            // withCredentials: true
         });
 
         const userWithToken = { ...response.data };

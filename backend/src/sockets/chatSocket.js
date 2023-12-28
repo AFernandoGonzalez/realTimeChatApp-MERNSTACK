@@ -1,7 +1,7 @@
 import { Server } from 'socket.io';
 import User from '../models/User.js';
 
-const FRONTEND_URL = process.env.FRONTEND_MAIN_URL || 'http://localhost:3000';
+const FRONTEND_URL = process.env.FRONTEND_MAIN_URL;
 
 
 let userSocketMap = {};
