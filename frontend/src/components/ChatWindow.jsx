@@ -55,9 +55,8 @@ const ChatWindow = ({
                 <div className="chat-welcome-section">
                     <div className="background-container">
                         <div className="card-container">
-                            <h4>Welcome to ChatAppeando</h4>
-                            <p className="text-muted  text-center m-4">Experience the joy of connecting with others in a seamless and delightful environment. Our platform is designed with your comfort in mind, ensuring a smooth and enjoyable chatting experience.</p>
-                            <button type="button" className="btn btn-primary">Get Started</button>
+                            <h4>No Chat Selected</h4>
+                            <p>Please select a chat to start messaging</p>
                         </div>
                     </div>
                 </div >

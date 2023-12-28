@@ -20,9 +20,6 @@ export const chatSocket = (server) => {
 
 
     io.on('connection', (socket) => {
-
-        console.log('Client connected', socket.id);
-
         const userId = socket.handshake.auth.userId;
 
         if (userId !== undefined) {
@@ -30,10 +27,7 @@ export const chatSocket = (server) => {
             io.emit('getOnlineUsers', Object.keys(userSocketMap));
         }
 
-        console.log('userSocketMap: ', Object.keys(userSocketMap));
-
         socket.on('disconnect', () => {
-            console.log('Client disconnected', socket.id);
 
             // Retrieve userId from the userSocketMap
             const disconnectedUserId = Object.keys(userSocketMap).find((key) => userSocketMap[key] === socket.id);

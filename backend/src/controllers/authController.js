@@ -2,6 +2,7 @@ import User from '../models/User.js';
 // import UserProfile from '../models/UserProfile.js';
 import bcrypt from 'bcrypt';
 import jwt from 'jsonwebtoken';
+import gravatar from 'gravatar';
 
 export const loginUser = async (req, res) => {
     const { email, password } = req.body;
@@ -43,28 +44,23 @@ export const registerUser = async (req, res) => {
         // Hash the password
         const hashedPassword = await bcrypt.hash(password, 10);
 
+        // Generate Gravatar URL based on email
+        const gravatarUrl = gravatar.url(email, { s: '200', r: 'pg', d: 'identicon' });
+
         // Create a new user
         const newUser = await User({
             username,
             email,
             password: hashedPassword,
+            profilePicture: gravatarUrl
         });
         
 
         const savedUser = await newUser.save();
 
-        // registerUser after saving the user
-        // const newProfile = new UserProfile({
-        //     userId: savedUser._id,
-        //     username: savedUser.username,
-        //     email: savedUser.email,
-        // });
-        // await newProfile.save();
-
-        // Create a token for the new user
         const token = jwt.sign({ userId: newUser._id }, process.env.JWT_SECRET, { expiresIn: '1d' });
 
-        // Send back the user data and token
+
         res.status(201).json({ message: "User created successfully", user: savedUser, token });
 
     } catch (error) {

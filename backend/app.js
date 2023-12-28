@@ -32,3 +32,5 @@ chatSocket(server);
 server.listen(PORT, () => {
     console.log(`Server is up on port`, PORT);
 });
+
+export default app;

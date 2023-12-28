@@ -42,7 +42,6 @@ export const ChatProvider = ({ children }) => {
             });
 
             newSocket.on("newMessage", (message) => {
-                console.log("newMessage: ", message);
                 sendMessage((prevMessage) => [...prevMessage, message]);
 
                 setConversation((prevConversation) => {
@@ -166,7 +165,6 @@ export const ChatProvider = ({ children }) => {
 
     const handleConversationClick = (participantId) => {
         setSelectedConversation(participantId);
-        console.log("participantId: ", participantId);
     };
 
     const searchForContact = async (e) => {

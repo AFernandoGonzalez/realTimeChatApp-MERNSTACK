@@ -12,7 +12,7 @@ export const Logout = () => {
 
     return (
 
-        <div className="col-lg-8 col-xl-9">
+        <div className="">
             <div className="authentication-page-content">
                 <div className="d-flex flex-column h-100 px-4 pt-4">
                     <div className="justify-content-center my-auto row">

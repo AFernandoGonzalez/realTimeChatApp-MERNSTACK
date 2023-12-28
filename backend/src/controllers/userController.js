@@ -59,8 +59,6 @@ export const getUserProfileByText = async (req, res) => {
 export const addContact = async (req, res) => {
     const { userId, contactId } = req.body;
 
-    console.log("req.body: ", req.body);
-
     try {
 
         // Check if the user exists

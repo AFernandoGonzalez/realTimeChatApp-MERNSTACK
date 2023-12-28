@@ -15,7 +15,6 @@ export const AuthProvider = ({ children }) => {
         return storedUser ? JSON.parse(storedUser) : null;
     });
 
-    // console.log("currentUser: ", currentUser);
 
     useEffect(() => {
         if (currentUser) {

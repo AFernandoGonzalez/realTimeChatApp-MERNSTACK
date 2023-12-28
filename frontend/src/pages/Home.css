@@ -1,24 +1,32 @@
-/* Add this style to your Home.css file */
-.home-container {
-  position: relative;
+.center-container {
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  height: 100%;
-  width: 100%;
+  height: 100vh; /* This makes the container take the full height of the viewport */
 }
 
-.home-container::before {
-  content: '';
+.background-image {
   position: absolute;
   top: 0;
   left: 0;
   width: 100%;
   height: 100%;
   background-image: url('../assets/chatparttenbg.jpg');
-  background-size: cover;
-  background-position: center;
-  opacity: 0.1; 
+  background-size: inherit;
+  opacity: 0.2;
 }
 
+
+.center-content {
+  text-align: center;
+  max-width: 500px;
+  z-index: 1;
+}
+
+/* Add this to center the text within the container */
+.center-content h2,
+.center-content p,
+.center-content a {
+  margin: 0;
+}

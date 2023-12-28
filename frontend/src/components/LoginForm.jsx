@@ -103,7 +103,7 @@ export const LoginForm = () => {
                                         Log In
                                     </button>
                                 </div>
-                                <div className="mt-4 text-center">
+                                {/* <div className="mt-4 text-center">
                                     <div className="signin-other-title">
                                         <h5 className="font-size-14 mb-4 title">Sign in with</h5>
                                     </div>
@@ -130,7 +130,7 @@ export const LoginForm = () => {
                                             </div>
                                         </div>
                                     </div>
-                                </div>
+                                </div> */}
                             </form>
                             {/* <div className="mt-5 text-center text-muted">
                                     <p>
