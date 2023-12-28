@@ -12,7 +12,7 @@ let io;
 export const chatSocket = (server) => {
     io = new Server(server, {
         cors: {
-            origin: FRONTEND_URL,
+            origin: '*',
             methods: ['GET', 'POST'],
             credentials: true,
             allowedHeaders: ['Content-Type', 'Authorization'],
