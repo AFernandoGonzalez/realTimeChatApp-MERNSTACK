@@ -1,5 +1,7 @@
 import React, { useEffect } from 'react';
 import { useAuth } from '../context/AuthContext';
+import { Link } from 'react-router-dom';
+
 
 
 export const Logout = () => {
@@ -29,9 +31,9 @@ export const Logout = () => {
                                         Thank you for using <span className="fw-semibold text-dark">ChatAppeando</span>
                                     </p>
                                     <div className="mt-4">
-                                        <a className="btn btn-primary w-100 waves-effect waves-light" href="/login">
+                                        <Link to="/login" className="btn btn-primary w-100 waves-effect waves-light">
                                             Sign In
-                                        </a>
+                                        </Link>
                                     </div>
                                 </div>
                             </div>
