@@ -14,6 +14,9 @@ export const chatSocket = (server) => {
         cors: {
             origin: FRONTEND_URL,
             methods: ['GET', 'POST'],
+            credentials: true,
+            transports: ['websocket'],
+            allowedHeaders: ['Content-Type', 'Authorization'],
         },
     });
 
