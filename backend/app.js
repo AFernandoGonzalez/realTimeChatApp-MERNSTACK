@@ -28,7 +28,7 @@ app.use(cors());
 app.use((req, res, next) => {
     const allowedOrigins = [
         'https://chatappeando.netlify.app',
-        'https://main--chatappeando.netlify.app/'
+        'https://main--chatappeando.netlify.app'
     ];
     const origin = req.headers.origin;
 
