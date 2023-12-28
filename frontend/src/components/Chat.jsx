@@ -1,9 +1,10 @@
-import { useEffect, useRef } from 'react'
+import { useEffect, useState, useRef } from 'react'
 import { useChat } from '../context/ChatContext';
 import ChatList from './ChatList';
 import ChatWindow from './ChatWindow';
 import { Search } from './Search';
 import './Chat.css'
+import { ProfileSettings } from './ProfileSettings';
 
 
 const Chat = () => {
@@ -41,12 +42,14 @@ const Chat = () => {
     }
   }, [selectedCurrentConversation?.messages]);
 
+
+
   return (
     <div className=''>
       <div className='layout-wrapper '>
-
         <div className='chat-left-sidebar m-4'>
           <h4 className="card-title mb-4">Messages</h4>
+          
           <Search
             searchText={searchText}
             changeSearchContactHandler={changeSearchContactHandler}
@@ -59,6 +62,7 @@ const Chat = () => {
             onlineUsers={onlineUsers}
             currentUser={currentUser}
           />
+          <ProfileSettings /> 
         </div>
 
         <div className='user-right-chat'>
@@ -72,7 +76,6 @@ const Chat = () => {
             changeMessageHandler={changeMessageHandler}
           />
         </div>
-
       </div>
     </div>
   )

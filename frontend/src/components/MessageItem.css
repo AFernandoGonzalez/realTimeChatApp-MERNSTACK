@@ -28,7 +28,7 @@
   justify-content: flex-end;
 }
 .chat-conversation-list .right .conversation-wrap {
-  background-color: #4eac6d3b;
+  background-color: #F9B572;
 }
 
 .chat-conversation-list
@@ -57,7 +57,7 @@
 }
 
 .conversation-wrap {
-  background-color: #f0f0f0;
+  background-color: #F3EEEA;
   padding: 15px;
   border-radius: 8px;
   margin-bottom: 5px;
@@ -79,4 +79,5 @@
 
 .conversation-name small {
   margin-left: 5px;
+  text-transform: capitalize;
 }

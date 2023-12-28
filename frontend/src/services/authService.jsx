@@ -19,7 +19,7 @@ const login = async (email, password) => {
         return userWithToken;
     } catch (err) {
         console.error(err);
-        throw new Error('Login failed');
+        throw new Error(err.response.data.message || 'Error while logging in')
     }
 };
 
